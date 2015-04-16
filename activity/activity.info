@@ -1,0 +1,6 @@
+[Activity]
+name = MiniGameMayhem
+bundle_id = edu.rit.MiniGameMayhem
+exec = sugar-activity MiniGameMayhemActivity.MiniGameMayhemActivity
+icon = activity-generic
+activity_version = 1
