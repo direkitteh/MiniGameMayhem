@@ -9,8 +9,9 @@ class MiniGameMayhem:
     def __init__(self):
         # Set up a clock for managing the frame rate.
         self.clock = pygame.time.Clock()
+        self.screen = pygame.display.get_surface()
 
-        self.gamestate = MainMenu()
+        self.gamestate = MainMenu(self.clock, self.screen)
 
         self.paused = False
 
@@ -32,7 +33,6 @@ class MiniGameMayhem:
     def run(self):
         self.running = True
 
-        screen = pygame.display.get_surface()
 
         while self.running:
             # Pump GTK messages.
@@ -51,16 +51,16 @@ class MiniGameMayhem:
             self.gamestate.update(events)
 
             # Clear Display
-            screen.fill((255, 255, 255))  # 255 for white
+            self.screen.fill((255, 255, 255))  # 255 for white
 
             # Draw States
-            self.gamestate.draw(screen)
+            self.gamestate.draw()
 
             # Flip Display
             pygame.display.flip()
 
             # Try to stay at 30 FPS
-            self.clock.tick(30)
+            #self.clock.tick(30)
 
 
 # This function is called when the game is run directly from the command line:
