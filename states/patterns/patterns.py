@@ -1,5 +1,6 @@
 import pygame
 from gi.repository import Gtk
+from states.patterns.patternshape import *
 
 from gamestate import *
 
@@ -12,6 +13,7 @@ class Patterns(GameState):
 
     # Called to make this round's puzzle
     def make_level(self):
+        self.testPoint = generateShape(3,0,0)
         pass
     
     # Update movement, track events
@@ -25,5 +27,6 @@ class Patterns(GameState):
 
     # Draw this state
     def draw(self):
+        self.testPoint.draw_shape(self.screen, 200, 200);
         pass
         
