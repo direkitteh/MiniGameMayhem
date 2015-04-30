@@ -5,8 +5,8 @@ from states.patterns.patternshape import *
 from gamestate import *
 
 class Patterns(GameState):
-    def __init__(self, clock, screen):
-        GameState.__init__(self,clock, screen)
+    def __init__(self, main, clock, screen):
+        GameState.__init__(self, main, clock, screen)
         self.font = pygame.font.SysFont("monospace", 25)
         make_level();
         pass
