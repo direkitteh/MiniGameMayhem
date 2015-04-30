@@ -11,10 +11,13 @@ class MiniGameMayhem:
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.get_surface()
 
-        self.gamestate = MainMenu(self.clock, self.screen)
+        self.gamestate = MainMenu(self, self.clock, self.screen)
 
         self.paused = False
 
+    def set_gamestate(self, gamestate):
+        self.gamestate = gamestate
+    
     def set_paused(self, paused):
         self.paused = paused
         self.gamestate.set_paused(paused)
