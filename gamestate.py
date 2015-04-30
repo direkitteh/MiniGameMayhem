@@ -5,7 +5,8 @@
 '''
 
 class GameState:
-    def __init__(self, clock, screen):
+    def __init__(self, main, clock, screen):
+        self.main = main
         self.clock = clock
         self.screen = screen
         self.paused = False

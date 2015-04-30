@@ -2,10 +2,11 @@ import pygame
 from gi.repository import Gtk
 
 from gamestate import *
+from pattenrs import Patterns
 
 class MainMenu(GameState):
-    def __init__(self, clock, screen):
-        GameState.__init__(self,clock, screen)
+    def __init__(self, main, clock, screen):
+        GameState.__init__(self, main, clock, screen)
         self.font = pygame.font.SysFont("monospace", 25)
         pass
 
