@@ -5,6 +5,52 @@ from .patternshape import *
 from gamestate import *
 
 class Patterns(GameState):
+    
+    SQUARE = PatternShape([
+        {'x':-1,'y':-1},
+        {'x':1, 'y':-1},
+        {'x':1, 'y':1},
+        {'x':-1,'y':1}
+    ], 4, 4, 2)
+    RECTANGLE = PatternShape([
+        {'x':-1.5,'y':-1},
+        {'x':1.5, 'y':-1},
+        {'x':1.5, 'y':1},
+        {'x':-1.5,'y':1}
+    ], 4, 4, 2)
+    RHOMBUS = PatternShape([
+        {'x': -1.5, 'y':-1},
+        {'x':0.5, 'y':-1},
+        {'x':1.5, 'y':1},
+        {'x':-0.5, 'y':1}
+    ], 4, 0, 2)
+
+    EQ_TRIANGLE = PatternShape([
+        {'x':0, 'y':-2},
+        {'x':2, 'y':1.5},
+        {'x':-2, 'y':1.5}
+    ], 3,0,0)
+    
+    AC_TRIANGLE = PatternShape([
+        {'x':-0.5, 'y':-2},
+        {'x':2, 'y':2},
+        {'x':-1.5, 'y':1.5}
+    ], 3,0,0)
+    
+    OB_TRIANGLE = PatternShape([
+        {'x':0.5, 'y':-2},
+        {'x':-2, 'y':2},
+        {'x':0.5, 'y':0.5}
+    ], 3,0,0)
+    
+    RT_TRIANGLE = PatternShape([
+        {'x':1.5, 'y':-2},
+        {'x':1.5, 'y':2},
+        {'x':-1.5, 'y':2}
+    ], 3,0,0)
+    
+    SHAPES = [ SQUARE, RECTANGLE, RHOMBUS ] 
+    
     def __init__(self, main, clock, screen):
         GameState.__init__(self, main, clock, screen)
         self.font = pygame.font.SysFont("monospace", 25)
@@ -13,7 +59,7 @@ class Patterns(GameState):
 
     # Called to make this round's puzzle
     def make_level(self):
-        self.testPoint = generate_shape(3,0,0)
+        #self.testPoint = generate_shape(3,0,0)
         pass
     
     # Update movement, track events
@@ -27,10 +73,14 @@ class Patterns(GameState):
 
     # Draw this state
     def draw(self):
-        self.testPoint.draw_shape(self.screen, 200, 200);
+        #self.testPoint.draw_shape(self.screen, 200, 200);
+        Patterns.RT_TRIANGLE.draw_shape(self.screen, 200, 200);
+        Patterns.OB_TRIANGLE.draw_shape(self.screen, 300, 200);
+        Patterns.AC_TRIANGLE.draw_shape(self.screen, 300, 300);
+        Patterns.EQ_TRIANGLE.draw_shape(self.screen, 200, 300);
         pass
         
-
+"""
 
 # Returns a shape with the given parameters
 # edges: Number of edges for this shape
@@ -55,4 +105,4 @@ def generate_shape(edges, rightAngles, parallels):
         
         points.append({ 'x':x, 'y':y })
     
-    return PatternShape(points, edges, rightAngles, parallels)
+    return PatternShape(points, edges, rightAngles, parallels)"""

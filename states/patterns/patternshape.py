@@ -8,6 +8,7 @@ from gamestate import *
 # Class used to store data about a shape
 # so that it may be compared to others
 class PatternShape:
+    
     def __init__(self, points, edges, rightAngels, parallels):
         self.edges = edges;
         self.points = points;
@@ -24,14 +25,14 @@ class PatternShape:
         pass
     
     #Draw to screen at pos
-    def draw_shape(self,screen,x,y):
-        print "DOOP"
-        print self.points
+    def draw_shape(self,screen,x,y, rad=10):
+        #print "DOOP"
+        #print self.points
         for i in range(len(self.points)-1):
             point = self.points[i]
             npoint = self.points[i+1]
-            pygame.draw.line(screen, 0x000, (x+point['x'], y+point['y']), (x+npoint['x'], y+npoint['y']))
+            pygame.draw.line(screen, 0x000, (x+point['x']*rad, y+point['y']*rad), (x+npoint['x']*rad, y+npoint['y']*rad))
             
         point = self.points[len(self.points)-1]
         npoint = self.points[0]
-        pygame.draw.line(screen, 0x000, (x+point['x'], y+point['y']), (x+npoint['x'], y+npoint['y']))
+        pygame.draw.line(screen, 0x000, (x+point['x']*rad, y+point['y']*rad), (x+npoint['x']*rad, y+npoint['y']*rad))
