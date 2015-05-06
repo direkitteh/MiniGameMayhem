@@ -2,7 +2,6 @@ import pygame
 from gi.repository import Gtk
 
 from gamestate import *
-from pattenrs import Patterns
 
 class MainMenu(GameState):
     def __init__(self, main, clock, screen):
