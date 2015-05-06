@@ -82,6 +82,17 @@ class Patterns(GameState):
         
 """
 
+Possible levels:
+    Which shape doesnt belong?
+        -3 right tirangles vs a not right triangle (not a right triangle)
+        -2 right triangles, a square vs a pentagon (no right angles)
+        -Square, 2 Rectangles, vs Rhombus (no right angles)
+        -Rhombus, Rectangle, Hexagon vs triangle (no parallels)
+        -3 acute triangles vs an obtuse or right 
+        -3 obtuse triangles vs an acute or right
+    (and why)
+        
+
 # Returns a shape with the given parameters
 # edges: Number of edges for this shape
 # rightAngles: Number of right angles for this shape
