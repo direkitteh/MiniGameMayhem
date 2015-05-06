@@ -9,7 +9,8 @@ from gamestate import *
 # so that it may be compared to others
 class PatternShape:
     
-    def __init__(self, points, edges, rightAngels, parallels):
+    def __init__(self, name, points, edges, rightAngels, parallels):
+        self.name = name;
         self.edges = edges;
         self.points = points;
         self.rightAngels = rightAngels;

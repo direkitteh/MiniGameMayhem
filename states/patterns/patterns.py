@@ -6,44 +6,44 @@ from gamestate import *
 
 class Patterns(GameState):
     
-    SQUARE = PatternShape([
+    SQUARE = PatternShape("Square", [
         {'x':-1,'y':-1},
         {'x':1, 'y':-1},
         {'x':1, 'y':1},
         {'x':-1,'y':1}
     ], 4, 4, 2)
-    RECTANGLE = PatternShape([
+    RECTANGLE = PatternShape("Rectangle", [
         {'x':-1.5,'y':-1},
         {'x':1.5, 'y':-1},
         {'x':1.5, 'y':1},
         {'x':-1.5,'y':1}
     ], 4, 4, 2)
-    RHOMBUS = PatternShape([
+    RHOMBUS = PatternShape("Rhombus", [
         {'x': -1.5, 'y':-1},
         {'x':0.5, 'y':-1},
         {'x':1.5, 'y':1},
         {'x':-0.5, 'y':1}
     ], 4, 0, 2)
 
-    EQ_TRIANGLE = PatternShape([
+    EQ_TRIANGLE = PatternShape("Equilateral Triangle", [
         {'x':0, 'y':-2},
         {'x':2, 'y':1.5},
         {'x':-2, 'y':1.5}
     ], 3,0,0)
     
-    AC_TRIANGLE = PatternShape([
+    AC_TRIANGLE = PatternShape("Acute Triangle", [
         {'x':-0.5, 'y':-2},
         {'x':2, 'y':2},
         {'x':-1.5, 'y':1.5}
     ], 3,0,0)
     
-    OB_TRIANGLE = PatternShape([
+    OB_TRIANGLE = PatternShape("Obtuse Triangle", [
         {'x':0.5, 'y':-2},
         {'x':-2, 'y':2},
         {'x':0.5, 'y':0.5}
     ], 3,0,0)
     
-    RT_TRIANGLE = PatternShape([
+    RT_TRIANGLE = PatternShape("Right Triangle", [
         {'x':1.5, 'y':-2},
         {'x':1.5, 'y':2},
         {'x':-1.5, 'y':2}
