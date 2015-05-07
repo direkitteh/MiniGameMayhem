@@ -65,6 +65,7 @@ class MiniGameMayhem:
                     self.vy = -self.vy
 
                 self.vy += 5
+                #filename = "whiteboard.jpg"
 
             # Clear Display
             screen.fill((255, 255, 255))  # 255 for white
@@ -72,7 +73,16 @@ class MiniGameMayhem:
             # Draw the ball
             pygame.draw.circle(screen, (255, 0, 0), (self.x, self.y), 100)
 
-            # Flip Display
+            img=pygame.image.load("whiteboard.jpg")
+            screen.blit(img,(12,12))
+            img = pygame.transform.scale(img,(40,50))
+            #print(type(img.get_width))
+            print("width = " + str(img.get_width()))
+            print("height = " + str(img.get_height()))
+            print(type(img))
+
+
+            # Flip Display (Update the full display Surface to the screen)
             pygame.display.flip()
 
             # Try to stay at 30 FPS
