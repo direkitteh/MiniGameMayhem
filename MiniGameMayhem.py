@@ -80,7 +80,6 @@ class MiniGameMayhem:
             #print("height = " + str(img.get_height()))
             #print(type(img))
 
-
             # Flip Display (Update the full display Surface to the screen)
             pygame.display.flip()
 
