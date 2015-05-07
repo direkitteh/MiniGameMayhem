@@ -173,10 +173,17 @@ class Patterns(GameState):
     # Draw this state
     def draw(self):
         #self.testPoint.draw_shape(self.screen, 200, 200);
-        Patterns.RT_TRIANGLES[0].draw_shape(self.screen, 200, 200);
-        Patterns.OB_TRIANGLES[0].draw_shape(self.screen, 300, 200);
-        Patterns.HEXAGON.draw_shape(self.screen, 300, 300);
-        Patterns.EQ_TRIANGLE.draw_shape(self.screen, 200, 300);
+        Patterns.RT_TRIANGLES[0].draw_shape(self.screen,[255,0,0], 200, 200,10,5);
+        Patterns.RT_TRIANGLES[0].draw_shape(self.screen,[0,0,0], 200, 200,10);
+        
+        Patterns.OB_TRIANGLES[0].draw_shape(self.screen,[255,0,0], 300, 200,10,5);
+        Patterns.OB_TRIANGLES[0].draw_shape(self.screen,[0,0,0], 300, 200,10);
+        
+        Patterns.HEXAGON.draw_shape(self.screen,[255,0,0], 300, 300,10,5);
+        Patterns.HEXAGON.draw_shape(self.screen,[0,0,0], 300, 300, 10);
+        
+        Patterns.EQ_TRIANGLE.draw_shape(self.screen,[255,0,0], 200, 300, 10,5);
+        Patterns.EQ_TRIANGLE.draw_shape(self.screen,[0,0,0], 200, 300, 10);
         pass
         
 """

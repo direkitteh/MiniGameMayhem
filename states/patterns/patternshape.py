@@ -26,11 +26,11 @@ class PatternShape:
         pass
     
     #Draw to screen at pos
-    def draw_shape(self,screen,x,y, rad=10):
+    def draw_shape(self,screen,color,x,y, rad=10, width=0):
         #print "DOOP"
         #print self.points
         scaledPoints = []
         for i in range(len(self.points)):
             point = self.points[i]
             scaledPoints.append([point['x']*rad+x, point['y']*rad+y])
-        pygame.draw.polygon(screen,0x000, scaledPoints)
+        pygame.draw.polygon(screen,color, scaledPoints, width)
