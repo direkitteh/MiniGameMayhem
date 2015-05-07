@@ -77,9 +77,9 @@ class MiniGameMayhem:
             screen.blit(img,(12,12))
             img = pygame.transform.scale(img,(40,50))
             #print(type(img.get_width))
-            print("width = " + str(img.get_width()))
-            print("height = " + str(img.get_height()))
-            print(type(img))
+            #print("width = " + str(img.get_width()))
+            #print("height = " + str(img.get_height()))
+            #print(type(img))
 
 
             # Flip Display (Update the full display Surface to the screen)
