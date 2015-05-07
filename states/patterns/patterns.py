@@ -1,6 +1,7 @@
 import pygame
 from gi.repository import Gtk
 from .patternshape import *
+from .patternlevel import *
 
 from gamestate import *
 
@@ -158,6 +159,21 @@ class Patterns(GameState):
 
     # Called to make this round's puzzle
     def make_level(self):
+    
+        level = PatternLevel()
+        level.set_question("Rawr rawr rawr rawr?")
+        
+        level.add_shape(Patterns.SQUARE)
+        level.add_shape(Patterns.SQUARE)
+        level.add_shape(Patterns.SQUARE)
+        level.add_shape(Patterns.SQUARE)
+        level.add_shape(Patterns.SQUARE)
+        
+        level.add_reason("Rawr!")
+        level.add_reason("Raaaawr")
+        level.add_reason("Rawr?")
+        level.add_reason("Rawr.")
+        self.level = level
         #self.testPoint = generate_shape(3,0,0)
         pass
     
@@ -173,7 +189,7 @@ class Patterns(GameState):
     # Draw this state
     def draw(self):
         #self.testPoint.draw_shape(self.screen, 200, 200);
-        Patterns.RT_TRIANGLES[0].draw_shape(self.screen,[255,0,0], 200, 200,10,5);
+        """Patterns.RT_TRIANGLES[0].draw_shape(self.screen,[255,0,0], 200, 200,10,5);
         Patterns.RT_TRIANGLES[0].draw_shape(self.screen,[0,0,0], 200, 200,10);
         
         Patterns.OB_TRIANGLES[0].draw_shape(self.screen,[255,0,0], 300, 200,10,5);
@@ -183,7 +199,8 @@ class Patterns(GameState):
         Patterns.HEXAGON.draw_shape(self.screen,[0,0,0], 300, 300, 10);
         
         Patterns.EQ_TRIANGLE.draw_shape(self.screen,[255,0,0], 200, 300, 10,5);
-        Patterns.EQ_TRIANGLE.draw_shape(self.screen,[0,0,0], 200, 300, 10);
+        Patterns.EQ_TRIANGLE.draw_shape(self.screen,[0,0,0], 200, 300, 10);"""
+        self.level.draw(self.screen)
         pass
         
 """
