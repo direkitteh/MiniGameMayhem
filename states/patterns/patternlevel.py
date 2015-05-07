@@ -106,6 +106,15 @@ class PatternLevel:
         pygame.draw.line(screen, (0,0,0), (width/2,0), (width/2,height)) 
         pygame.draw.line(screen, (0,0,0), (0,height/2), (width,height/2))
         pass
+        
+        # Check button
+        checkButtonText = "Check Answer!"
+        checkButton =font.render(checkButtonText, True, [0,0,0])
+        checkButtonSize = font.size(checkButtonText)
+        checkRect = [width/2 - checkButtonSize[0]/2 - 10, height/2 + 170 + len(self.reasons)*(15+checkButtonSize[1]), checkButtonSize[0]+20,checkButtonSize[1]+20]
+        checkButtonColor = [220,220,220]
+        pygame.draw.rect(screen, checkButtonColor, checkRect)
+        screen.blit(checkButton, [checkRect[0]+10, checkRect[1]+10])
 
 def mouse_in_rect(mousePos, rect):
     return (mousePos[0] >= rect[0] and mousePos[1] >= rect[1] and mousePos[0] < (rect[0]+rect[2]) and mousePos[1] < (rect[1]+rect[3]))
