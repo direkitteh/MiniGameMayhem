@@ -38,16 +38,25 @@ class PatternLevel:
         width = screen.get_width();
         height = screen.get_height();
         
+        
+        # Static text
         whyText = font.render("and why?", True, [0,0,0])
-        screen.blit(whyText, [width/2 - font.size("and why?")[0]/2, height/2 + 70]);
+        screen.blit(whyText, [width/2 - font.size("and why?")[0]/2, height/2 + 120]);
         
         qText = font.render(self.question, True, [0,0,0])
         screen.blit(qText, [width/2 - font.size(self.question)[0]/2, height/2 - 100]);
         
         
+        # Selected shape box
+        selectedShapeBoxWidth = 250
+        pygame.draw.rect(screen, [0,0,0], [width/2-selectedShapeBoxWidth/2,height/2 + 70,selectedShapeBoxWidth,font.size("M")[1]+6], 2)
+        
+        # Shape drawing
         shapeSpacing = 120
         shapePosX = width/2 - 120.0*(len(self.shapes)-1)/2.0;
         shapePosY = height/2;
+        
+        printedName = "" # Name of shape selected to draw in box
         for i in range(len(self.shapes)):
             posX = shapePosX + i*shapeSpacing
             rect = [posX-shapeSpacing/2+10, shapePosY-shapeSpacing/2+10, shapeSpacing-20,shapeSpacing-20]
@@ -55,20 +64,30 @@ class PatternLevel:
             shapeColor = [0,0,0]
             bgColor = [200,200,200]
             
+            highlighted = mouse_in_rect(mousePos, rect)
+            selected = self.shapeSelected
+            
             if(self.shapeSelected == i):
                 shapeColor = [255,255,0]
+                if(printedName == ""): printedName = self.shapes[i].name
             if(mouse_in_rect(mousePos, rect)):
                 bgColor = [0,240,240]
-                if(pygame.mouse.get_pressed()[0] == True):
+                printedName = self.shapes[i].name # Being highlighted overrides being selected
+                if(pygame.mouse.get_pressed()[0]):
                     self.shapeSelected = i
             
             pygame.draw.rect(screen, bgColor, rect) # background
             self.shapes[i].draw_shape(screen, shapeColor, posX, shapePosY, 30) # TODO change color and width by selection
         
+        # Draw name in box of selected shape
+        name = font.render(printedName, True, [0,0,0])
+        nameSize = font.size(printedName)
+        screen.blit(name, [width/2 - nameSize[0]/2, height/2+73])
         
+        # Reasons drawing
         for i in range(len(self.reasons)) :
             size = font.size(self.reasons[i]);
-            yPos = height/2 + 120 + i*(size[1]+15)
+            yPos = height/2 + 170 + i*(size[1]+15)
             rect = [0, yPos-3, width, size[1]+6]
             
             textColor = [0,0,0]
@@ -78,7 +97,7 @@ class PatternLevel:
                 textColor = [255,255,0]
             if(mouse_in_rect(mousePos, rect)):
                 bgColor = [0,240,240]
-                if(pygame.mouse.get_pressed()[0] == True):
+                if(pygame.mouse.get_pressed()[0]):
                     self.reasonSelected = i
             res = font.render(self.reasons[i], True, textColor); # TODO change color by selection
             pygame.draw.rect(screen, bgColor, rect) # background
