@@ -1,7 +1,6 @@
+import random
 import time
 import pygame
-import math
-import pygame.gfxdraw
 from pygame.locals import *
 
 WIDTH = 640
@@ -150,9 +149,24 @@ class SequenceGame:
 class SequenceProblem:
     def __init__(self, difficulty):
         # Generate problem here, hardcoded for now
-        self.equation = "n + ?"
-        self.sequence = "2, 3, 4, 5"
-        self.solution = "1"
+        self.gen_simple_addition(random.randint(0, 1))
+
+    def gen_simple_addition(self, eqn_given):
+        increment = random.randint(1, 9)
+        generate_equation = "x+" + str(increment)
+        self.sequence = ""
+        x = random.randint(1, 20)
+        for i in range(0, 4):
+            self.sequence += str(x) + ", "
+            x = eval(generate_equation)
+        if eqn_given:
+            self.equation = "x + " + str(increment)
+            self.sequence = self.sequence + "?"
+            self.solution = str(x)
+        else:
+            self.equation = "x + ?"
+            self.sequence = self.sequence[0:-2]
+            self.solution = str(increment)
 
     def get_sequence(self):
         return self.sequence
