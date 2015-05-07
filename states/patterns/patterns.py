@@ -2,16 +2,17 @@ import pygame
 from gi.repository import Gtk
 from .patternshape import *
 from .patternlevel import *
+from random import randint
 
 from gamestate import *
 
 class Patterns(GameState):
     
     SQUARE = PatternShape("Square", [
-        {'x':-1,'y':-1},
-        {'x':1, 'y':-1},
-        {'x':1, 'y':1},
-        {'x':-1,'y':1}
+        {'x':-10,'y':-10},
+        {'x':10, 'y':-10},
+        {'x':10, 'y':10},
+        {'x':-10,'y':10}
     ], 4, 4, 2)
 
     EQ_TRIANGLE = PatternShape("Equilateral Triangle", [
@@ -150,6 +151,8 @@ class Patterns(GameState):
             {'x':0, 'y':-2}
         ], 3,0,0)
     ]
+    
+    SHAPES = [RECTANGLES, RHOMBUSES, AC_TRIANGLES, OB_TRIANGLES, RT_TRIANGLES, [SQUARE, EQ_TRIANGLE, HEXAGON]]
         
     def __init__(self, main, clock, screen):
         GameState.__init__(self, main, clock, screen)
@@ -163,10 +166,14 @@ class Patterns(GameState):
         level = PatternLevel()
         level.set_question("Rawr rawr rawr rawr?")
         
-        level.add_shape(Patterns.SQUARE)
-        level.add_shape(Patterns.SQUARE)
-        level.add_shape(Patterns.SQUARE)
-        level.add_shape(Patterns.SQUARE)
+        arr = Patterns.SHAPES[ randint(0,len(Patterns.SHAPES)-1) ]
+        level.add_shape(arr[ randint(0,len(arr)-1) ])
+        arr = Patterns.SHAPES[ randint(0,len(Patterns.SHAPES)-1) ]
+        level.add_shape(arr[ randint(0,len(arr)-1) ])
+        arr = Patterns.SHAPES[ randint(0,len(Patterns.SHAPES)-1) ]
+        level.add_shape(arr[ randint(0,len(arr)-1) ])
+        arr = Patterns.SHAPES[ randint(0,len(Patterns.SHAPES)-1) ]
+        level.add_shape(arr[ randint(0,len(arr)-1) ])
         level.add_shape(Patterns.SQUARE)
         
         level.add_reason("Rawr!")

@@ -15,6 +15,16 @@ class PatternShape:
         self.points = points;
         self.rightAngels = rightAngels;
         self.parallels = parallels;
+        
+        # Normalizing points
+        max = 0
+        for point in self.points:
+            if ( point['x'] > max ): max = point['x']
+            if ( point['y'] > max ): max = point['y']
+        
+        for point in self.points:
+            point['x'] /= max
+            point['y'] /= max
         pass
         
     # Get number of right angles
