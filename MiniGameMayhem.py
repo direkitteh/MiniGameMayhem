@@ -65,7 +65,6 @@ class MiniGameMayhem:
                     self.vy = -self.vy
 
                 self.vy += 5
-                #filename = "whiteboard.jpg"
 
             # Clear Display
             screen.fill((255, 255, 255))  # 255 for white
