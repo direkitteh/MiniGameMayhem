@@ -12,45 +12,144 @@ class Patterns(GameState):
         {'x':1, 'y':1},
         {'x':-1,'y':1}
     ], 4, 4, 2)
-    RECTANGLE = PatternShape("Rectangle", [
-        {'x':-1.5,'y':-1},
-        {'x':1.5, 'y':-1},
-        {'x':1.5, 'y':1},
-        {'x':-1.5,'y':1}
-    ], 4, 4, 2)
-    RHOMBUS = PatternShape("Rhombus", [
-        {'x': -1.5, 'y':-1},
-        {'x':0.5, 'y':-1},
-        {'x':1.5, 'y':1},
-        {'x':-0.5, 'y':1}
-    ], 4, 0, 2)
 
     EQ_TRIANGLE = PatternShape("Equilateral Triangle", [
         {'x':0, 'y':-2},
         {'x':2, 'y':1.5},
         {'x':-2, 'y':1.5}
     ], 3,0,0)
+
+    HEXAGON = PatternShape("Equilateral Hexagon", [
+        {'x':1.25, 'y':2},
+        {'x':2.5, 'y':0},
+        {'x':1.25, 'y':-2},
+        {'x':-1.25, 'y':-2},
+        {'x':-2.5, 'y':0},
+        {'x':-1.25, 'y':2},
+    ], 6,0,3)
     
-    AC_TRIANGLE = PatternShape("Acute Triangle", [
-        {'x':-0.5, 'y':-2},
-        {'x':2, 'y':2},
-        {'x':-1.5, 'y':1.5}
-    ], 3,0,0)
+    RECTANGLES = [ # mutations of a rectangle
+        PatternShape("Rectangle", [
+            {'x':-2,'y':-0.5},
+            {'x':2, 'y':-0.5},
+            {'x':2, 'y':0.5},
+            {'x':-2,'y':0.5}
+        ], 4, 4, 2),
+        PatternShape("Rectangle", [
+            {'x':-1.5,'y':-1},
+            {'x':1.5, 'y':-1},
+            {'x':1.5, 'y':1},
+            {'x':-1.5,'y':1}
+        ], 4, 4, 2),
+        PatternShape("Rectangle", [
+            {'x':-1,'y':-1.5},
+            {'x':1, 'y':-1.5},
+            {'x':1, 'y':1.5},
+            {'x':-1,'y':1.5}
+        ], 4, 4, 2),
+        PatternShape("Rectangle", [
+            {'x':-2,'y':-0.5},
+            {'x':2, 'y':-0.5},
+            {'x':2, 'y':0.5},
+            {'x':-2,'y':0.5}
+        ], 4, 4, 2),
+    ]
+    RHOMBUSES = [
+        PatternShape("Rhombus", [
+            {'x': 2, 'y':-1},
+            {'x':-0.25, 'y':-1},
+            {'x':-2, 'y':1},
+            {'x':0.25, 'y':1}
+        ], 4, 0, 2),
+        PatternShape("Rhombus", [
+            {'y': 2, 'x':-1},
+            {'y':-0.25, 'x':-1},
+            {'y':-2, 'x':1},
+            {'y':0.25, 'x':1}
+        ], 4, 0, 2),
+        PatternShape("Rhombus", [
+            {'y': -1.5, 'x':-1},
+            {'y':0.5, 'x':-1},
+            {'y':1.5, 'x':1},
+            {'y':-0.5, 'x':1}
+        ], 4, 0, 2),
+        PatternShape("Rhombus", [
+            {'x': -1.5, 'y':-1},
+            {'x':0.5, 'y':-1},
+            {'x':1.5, 'y':1},
+            {'x':-0.5, 'y':1}
+        ], 4, 0, 2)
+    ]
     
-    OB_TRIANGLE = PatternShape("Obtuse Triangle", [
-        {'x':0.5, 'y':-2},
-        {'x':-2, 'y':2},
-        {'x':0.5, 'y':0.5}
-    ], 3,0,0)
+    AC_TRIANGLES = [
+        PatternShape("Acute Triangle", [
+            {'x':-0.5, 'y':-2},
+            {'x':2, 'y':2},
+            {'x':-1.5, 'y':1.5}
+        ], 3,0,0),
+        PatternShape("Acute Triangle", [
+            {'y':-0.5, 'x':-2},
+            {'y':2, 'x':2},
+            {'y':-1.5, 'x':1.5}
+        ], 3,0,0),
+        PatternShape("Acute Triangle", [
+            {'x':0, 'y':-3},
+            {'x':2, 'y':-2},
+            {'x':-2, 'y':-2}
+        ], 3,0,0),
+        PatternShape("Acute Triangle", [
+            {'x':-1, 'y':-1},
+            {'x':3, 'y':-2},
+            {'x':-2, 'y':-2}
+        ], 3,0,0)
+    ]
     
-    RT_TRIANGLE = PatternShape("Right Triangle", [
-        {'x':1.5, 'y':-2},
-        {'x':1.5, 'y':2},
-        {'x':-1.5, 'y':2}
-    ], 3,0,0)
+    OB_TRIANGLES = [
+        PatternShape("Obtuse Triangle", [
+            {'x':0.5, 'y':-2},
+            {'x':-2, 'y':2},
+            {'x':0.5, 'y':0.5}
+        ], 3,0,0),
+        PatternShape("Obtuse Triangle", [
+            {'x':2, 'y':1},
+            {'x':4, 'y':-2},
+            {'x':-3, 'y':0}
+        ], 3,0,0),
+        PatternShape("Obtuse Triangle", [
+            {'x':-1, 'y':2},
+            {'x':3, 'y':-3},
+            {'x':-1, 'y':-1}
+        ], 3,0,0),
+        PatternShape("Obtuse Triangle", [
+            {'x':0, 'y':1},
+            {'x':4, 'y':-1},
+            {'x':-3, 'y':-1}
+        ], 3,0,0)
+    ]
     
-    SHAPES = [ SQUARE, RECTANGLE, RHOMBUS ] 
-    
+    RT_TRIANGLES = [
+        PatternShape("Right Triangle", [
+            {'x':-2, 'y':3},
+            {'x':3, 'y':-1},
+            {'x':-2, 'y':-1}
+        ], 3,0,0),
+        PatternShape("Right Triangle", [
+            {'x':-3, 'y':1},
+            {'x':2, 'y':1},
+            {'x':2, 'y':-1}
+        ], 3,0,0),
+        PatternShape("Right Triangle", [
+            {'x':-3, 'y':1},
+            {'x':2, 'y':1},
+            {'x':2, 'y':-1}
+        ], 3,0,0),
+        PatternShape("Right Triangle", [
+            {'x':-2, 'y':0},
+            {'x':1, 'y':3},
+            {'x':0, 'y':-2}
+        ], 3,0,0)
+    ]
+        
     def __init__(self, main, clock, screen):
         GameState.__init__(self, main, clock, screen)
         self.font = pygame.font.SysFont("monospace", 25)
@@ -74,9 +173,9 @@ class Patterns(GameState):
     # Draw this state
     def draw(self):
         #self.testPoint.draw_shape(self.screen, 200, 200);
-        Patterns.RT_TRIANGLE.draw_shape(self.screen, 200, 200);
-        Patterns.OB_TRIANGLE.draw_shape(self.screen, 300, 200);
-        Patterns.AC_TRIANGLE.draw_shape(self.screen, 300, 300);
+        Patterns.RT_TRIANGLES[0].draw_shape(self.screen, 200, 200);
+        Patterns.OB_TRIANGLES[0].draw_shape(self.screen, 300, 200);
+        Patterns.HEXAGON.draw_shape(self.screen, 300, 300);
         Patterns.EQ_TRIANGLE.draw_shape(self.screen, 200, 300);
         pass
         

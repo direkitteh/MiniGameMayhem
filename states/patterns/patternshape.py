@@ -29,11 +29,8 @@ class PatternShape:
     def draw_shape(self,screen,x,y, rad=10):
         #print "DOOP"
         #print self.points
-        for i in range(len(self.points)-1):
+        scaledPoints = []
+        for i in range(len(self.points)):
             point = self.points[i]
-            npoint = self.points[i+1]
-            pygame.draw.line(screen, 0x000, (x+point['x']*rad, y+point['y']*rad), (x+npoint['x']*rad, y+npoint['y']*rad))
-            
-        point = self.points[len(self.points)-1]
-        npoint = self.points[0]
-        pygame.draw.line(screen, 0x000, (x+point['x']*rad, y+point['y']*rad), (x+npoint['x']*rad, y+npoint['y']*rad))
+            scaledPoints.append([point['x']*rad+x, point['y']*rad+y])
+        pygame.draw.polygon(screen,0x000, scaledPoints)
