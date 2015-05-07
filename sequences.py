@@ -1,5 +1,7 @@
-import sys
+import time
 import pygame
+import math
+import pygame.gfxdraw
 from pygame.locals import *
 
 WIDTH = 640
@@ -11,6 +13,7 @@ class Colors:
     DARK_GREEN = (0, 128, 0)
     WHITE = (255, 255, 255)
     RED = (255, 0, 0)
+    YELLOW = (255, 255, 0)
 
 
 class SequenceGame:
@@ -19,23 +22,17 @@ class SequenceGame:
         self.clock = clock
         self.problem = None
         self.answer_input = None
+        self.time_limit = 10
 
     def start(self):
         self.generate_new()
 
         done = False
-        problem_finished_wait = 0
+        self.start_time = time.time()
         while not done:
             self.screen.fill(Colors.WHITE)
             # Events
             events = pygame.event.get()
-            if problem_finished_wait > 0:
-                problem_finished_wait -= 1
-                self.write_header()
-                self.draw_response(self.correct)
-                pygame.display.flip()
-                self.clock.tick(60)
-                continue
 
             for event in events:
                 if event.type == QUIT:
@@ -43,24 +40,38 @@ class SequenceGame:
                 if event.type == KEYDOWN and event.key == K_ESCAPE:
                     done = True
                 if event.type == KEYDOWN and (event.key == K_RETURN or event.key == K_KP_ENTER):
-                    self.write_header()
-                    self.correct = self.problem.is_correct(self.answer_input.get_value())
-                    self.draw_response(self.correct)
-                    self.generate_new()
-                    problem_finished_wait = 60
-                    pygame.display.flip()
-                    self.clock.tick(60)
+                    correct = self.problem.is_correct(self.answer_input.get_value())
+                    self.reset(correct)
                     continue
 
             self.answer_input.update(events)
+
+            if (time.time() - self.start_time) >= self.time_limit:
+                self.reset(2)
 
             # Draws
             self.write_header()
             self.write_problem()
             self.draw_answer_input()
+            self.write_timer()
 
             pygame.display.flip()
             self.clock.tick(60)
+
+    def reset(self, correct):
+        self.write_header()
+        self.draw_response(correct)
+        self.generate_new()
+        pygame.display.flip()
+        self.clock.tick(60)
+        start_time = time.time()
+        while (time.time() - start_time) < 1:
+            self.screen.fill(Colors.WHITE)
+            self.write_header()
+            self.draw_response(correct)
+            pygame.display.flip()
+            self.clock.tick(60)
+        self.start_time = time.time()
 
     def write_header(self):
         font = pygame.font.SysFont(None, 48)
@@ -85,7 +96,7 @@ class SequenceGame:
 
         else:
             equation_text = font.render(self.problem.get_equation(), True, Colors.DARK_GREEN)
-            middle = ((self.screen.get_width() // 2) - equation_text.get_width() // 2,
+            middle = ((self.screen.get_width() // 12) - equation_text.get_width() // 2,
                       (self.screen.get_height() // 2) - equation_text.get_height() // 2)
             self.screen.blit(equation_text, middle)
 
@@ -94,6 +105,20 @@ class SequenceGame:
             below_middle = ((self.screen.get_width() // 2) - sequence_text.get_width() // 2,
                             middle[1] + equation_text.get_height() + 20)
             self.screen.blit(sequence_text, below_middle)
+
+    def write_timer(self):
+        time_left = int(round(self.time_limit - (time.time() - self.start_time), 0))
+        font = pygame.font.SysFont(None, 32)
+        percent = (self.time_limit - (time.time() - self.start_time)) / self.time_limit
+        if percent > 0.6666:
+            color = Colors.GREEN
+        elif percent < 0.3333:
+            color = Colors.RED
+        else:
+            color = Colors.YELLOW
+        timer_text = font.render(str(time_left), True, color)
+        text_position = ((self.screen.get_width() - timer_text.get_width()) - 10, 10)
+        self.screen.blit(timer_text, text_position)
 
     def draw_answer_input(self):
         font = pygame.font.SysFont(None, 32)
@@ -107,8 +132,10 @@ class SequenceGame:
 
     def draw_response(self, correct):
         font = pygame.font.SysFont(None, 32)
-        if correct:
+        if correct == True:
             text = font.render("Correct!", True, Colors.GREEN)
+        elif correct == 2:
+            text = font.render("Time's Up!", True, Colors.RED)
         else:
             text = font.render("Incorrect", True, Colors.RED)
         text_position = ((self.screen.get_width() // 2) - text.get_width() // 2,
