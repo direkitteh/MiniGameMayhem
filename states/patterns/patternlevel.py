@@ -77,7 +77,7 @@ class PatternLevel:
                     self.shapeSelected = i
             
             pygame.draw.rect(screen, bgColor, rect) # background
-            self.shapes[i].draw_shape(screen, shapeColor, posX, shapePosY, 30) # TODO change color and width by selection
+            self.shapes[i].draw_shape(screen, shapeColor, posX, shapePosY, 30)
         
         # Draw name in box of selected shape
         name = font.render(printedName, True, [0,0,0])
@@ -99,7 +99,7 @@ class PatternLevel:
                 bgColor = [0,240,240]
                 if(pygame.mouse.get_pressed()[0]):
                     self.reasonSelected = i
-            res = font.render(self.reasons[i], True, textColor); # TODO change color by selection
+            res = font.render(self.reasons[i], True, textColor)
             pygame.draw.rect(screen, bgColor, rect) # background
             screen.blit(res, [width/2 - size[0]/2, yPos])
         
