@@ -96,8 +96,7 @@ class MiniGameMayhem:
             #pygame.draw.circle(screen, (255, 0, 0), (self.x, self.y), 100)
 
             #handle events
-            events = pygame.event.get()
-            self.handleEvents(events)
+            self.handleEvents()
 
             #make the fraction
             level = 1 #for now
@@ -138,6 +137,7 @@ class MiniGameMayhem:
                 #difficulty background
                 #TODO: blit difficulty background
                 #TODO: blit 3 difficulty buttons
+                pass
 
             #print("screenwidth IS : " + str(screen.get_width()))
             #print("screenheighti is : " + str(screen.get_height()))
@@ -158,7 +158,7 @@ class MiniGameMayhem:
         #reference for possibleX/Y. See actual value at beginning of class
         #possibleX = [0,1,2,3,5,7,9,11,13,17,19,23]
         #possibleY = [1,2,3,5,7,9,11,13,17,19,23]
-        print("level is : " + str(level))
+        #print("level is : " + str(level))
         simpX = -1
         simpY = -1
         unSimpX = -1
@@ -188,15 +188,15 @@ class MiniGameMayhem:
 
     #TODO: finish this rather than just print the values
     def drawFraction(e, theFraction):
-        print("theFraction.simpX = " + str(theFraction.simpX))
-        print("theFraction.simpY = " + str(theFraction.simpY))
-        print("theFraction.unSimpX = " + str(theFraction.unSimpX))
-        print("theFraction.unSimpY = " + str(theFraction.unSimpY))
+        #print("theFraction.simpX = " + str(theFraction.simpX))
+        #print("theFraction.simpY = " + str(theFraction.simpY))
+        #print("theFraction.unSimpX = " + str(theFraction.unSimpX))
+        #print("theFraction.unSimpY = " + str(theFraction.unSimpY))
         pass
 
     def animateObject(e, selectedObjectId):
-        titleButtons
-        currentScreen
+        #titleButtons
+        #currentScreen
         if e.currentScreen == "title":
             if(selectedObjectId == 0): #if selected is startButton
                 e.animateStartButton()
@@ -223,10 +223,22 @@ class MiniGameMayhem:
             )\
         )
 
-    def handleEvents(e, events):
-        for event in events:
-            if event.type == KEYDOWN:
-                if event.key == 
+    def handleEvents(e):
+        for event in pygame.event.get():
+            print("event: " + str(event))
+            print("event in events")
+            if event.type == pygame.KEYDOWN:
+                print("pygame.keydown done")
+                if event.key == pygame.K_DOWN:
+                    kDownPressed(e)
+                if event.key == pygame.K_RETURN or event.key == pygame.K_ENTER:
+                    kEnterPressed(e)
+
+    def kDownPressed(e):
+        print("downpressed")
+
+    def kEnterPressed(e):
+        print("enterpressed")
 
         #old
 #        theButtonScaler = 0.1
