@@ -19,6 +19,8 @@ class MiniGameMayhem:
     #this is default button scale. the bounds are in animate object function
     startButtonScalerOrig = .5
     startButtonScaler = startButtonScalerOrig
+    howToPlayButtonScalerOrig = .5
+    howToPlayButtonScaler = howToPlayButtonScalerOrig
     selectedObjectId = 0
     #selected button increasingOrNot
     buttonIncreasingOrNot = True
@@ -145,6 +147,8 @@ class MiniGameMayhem:
                         int(round(screen.get_height()/2 - self.startButton.get_height()/2)) \
                     )\
                 )
+                #display howToPlay button
+                #TODO:
             elif(self.currentScreen == "difficulty"): #TODO: this
                 #difficulty background
                 #TODO: blit difficulty background
@@ -163,7 +167,7 @@ class MiniGameMayhem:
             myfont = pygame.font.SysFont("monospace", 15)
             lab = myfont.render("selectedObjectId: " + str(self.selectedObjectId), 1, (255,255,0))
             screen.blit(lab, (100,100))
-            
+
 
             # Flip Display (Update the full display Surface to the screen)
             pygame.display.flip()
