@@ -17,7 +17,8 @@ class MiniGameMayhem:
     startButtonOrig = pygame.image.load("startbutton.png")
     startButton = pygame.image.load("startbutton.png")
     #this is default button scale. the bounds are in animate object function
-    startButtonScaler = .5
+    startButtonScalerOrig = .5
+    startButtonScaler = startButtonScalerOrig
     selectedObjectId = 0
     #selected button increasingOrNot
     buttonIncreasingOrNot = True
@@ -72,11 +73,11 @@ class MiniGameMayhem:
                 Gtk.main_iteration()
 
             # Pump PyGame messages.
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    return
-                elif event.type == pygame.VIDEORESIZE:
-                    pygame.display.set_mode(event.size, pygame.RESIZABLE)
+#            for event in pygame.event.get():
+#                if event.type == pygame.QUIT:
+#                    return
+#                elif event.type == pygame.VIDEORESIZE:
+#                    pygame.display.set_mode(event.size, pygame.RESIZABLE)
 #                elif event.type == pygame.KEYDOWN:
 #                    if event.key == pygame.K_LEFT:
 #                        self.direction = -1
@@ -98,14 +99,16 @@ class MiniGameMayhem:
 #
 #                self.vy += 5
 
+            #handle events
+            handled = self.handleEvents()
+            if handled == "quit":
+                return
+
             # Clear Display
             screen.fill((255, 255, 255))  # 255 for white
 
             # Draw the ball
             #pygame.draw.circle(screen, (255, 0, 0), (self.x, self.y), 100)
-
-            #handle events
-            self.handleEvents()
 
             #make the fraction
             level = 1 #for now
@@ -155,6 +158,12 @@ class MiniGameMayhem:
             #print("width = " + str(img.get_width()))
             #print("height = " + str(img.get_height()))
             #print(type(img))
+
+            #debug tools
+            myfont = pygame.font.SysFont("monospace", 15)
+            lab = myfont.render("selectedObjectId: " + str(self.selectedObjectId), 1, (255,255,0))
+            screen.blit(lab, (100,100))
+            
 
             # Flip Display (Update the full display Surface to the screen)
             pygame.display.flip()
@@ -207,9 +216,9 @@ class MiniGameMayhem:
         #titleButtons
         #currentScreen
         if e.currentScreen == "title":
-            if(selectedObjectId[selectedObjectId] == "startButton"): #if selected is startButton
+            if(e.titleButtons[selectedObjectId] == "startButton"): #if selected is startButton
                 e.animateStartButton()
-            elif(selectedObjectId[selectedObjectId] == "howToPlay"): #if selected is How To Play
+            elif(e.titleButtons[selectedObjectId] == "howToPlay"): #if selected is How To Play
                 pass #TODO: animate how to play button
 
     def animateStartButton(e):
@@ -234,37 +243,54 @@ class MiniGameMayhem:
 
     def handleEvents(e):
         for event in pygame.event.get():
-            print("event: " + str(event))
-            print("event in events")
-            if event.type == pygame.KEYDOWN:
-                print("pygame.keydown done")
+            #print("event: " + str(event))
+            #print("event in events")
+            if event.type == pygame.QUIT:
+                return "quit"
+            elif event.type == pygame.VIDEORESIZE:
+                pygame.display.set_mode(event.size, pygame.RESIZABLE)
+            elif event.type == pygame.KEYDOWN:
+                #print("pygame.keydown done")
                 if event.key == pygame.K_DOWN:
-                    kDownPressed(e)
-                if event.key == pygame.K_RETURN or event.key == pygame.K_ENTER:
-                    kEnterPressed(e)
+                    e.kDownPressed()
+                elif event.key == pygame.K_UP:
+                    e.kUpPressed()
+                elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
+                    e.kEnterPressed()
 
     def kDownPressed(e):
-        print("downpressed")
+        #print("downpressed")
         if e.isMenuScreen():
+            e.resetCurrentMenuItemSize()
             e.selectedObjectId += 1
             if(e.selectedObjectId >= len(e.titleButtons)):
                 e.selectedObjectId = 0
 
+    def resetCurrentMenuItemSize(e):
+        if e.currentScreen == "title":
+            if(e.titleButtons[e.selectedObjectId] == "startButton"): #if selected is startButton
+                e.startButtonScaler = e.startButtonScalerOrig
+            elif(e.titleButtons[e.selectedObjectId] == "howToPlay"): #if selected is How To Play
+                pass #TODO:
+
     def isMenuScreen(e):
-        if currentScreen in menuScreens:
+        if e.currentScreen in e.menuScreens:
             return True
         else:
             return False
 
     def kUpPressed(e):
-        print("enterpressed")
+        #print("uppressed")
         if e.isMenuScreen():
+            e.resetCurrentMenuItemSize()
+            #print("subtracting 1")
             e.selectedObjectId -= 1
-            if(e.selectedObjectId <= 0):
+            if(e.selectedObjectId < 0):
+                #print("len of title buttons: " + str(len(e.titleButtons)))
                 e.selectedObjectId = len(e.titleButtons) - 1
 
     def kEnterPressed(e):
-        print("enterpressed")
+        #print("enterpressed")
         if e.currentScreen == "title":
             if e.titleButtons[e.selectedObjectId] == "howToPlay":
                 switchToScreen("howToPlay")
