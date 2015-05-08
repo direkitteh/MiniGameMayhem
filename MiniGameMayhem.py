@@ -11,6 +11,7 @@ class MiniGameMayhem:
     possibleY = [1,2,3,5,7,9,11,13,17,19,23]
     tempNumFracToPrint = 4
     tempNumPrinted = 0;
+    fractionsTitle=pygame.image.load("fractionstitle.png")
 
     def __init__(self):
         # Set up a clock for managing the frame rate.
@@ -60,25 +61,25 @@ class MiniGameMayhem:
                         self.direction = 1
 
             # Move the ball
-            if not self.paused:
-                self.x += self.vx * self.direction
-                if self.direction == 1 and self.x > screen.get_width() + 100:
-                    self.x = -100
-                elif self.direction == -1 and self.x < -100:
-                    self.x = screen.get_width() + 100
-
-                self.y += self.vy
-                if self.y > screen.get_height() - 100:
-                    self.y = screen.get_height() - 100
-                    self.vy = -self.vy
-
-                self.vy += 5
+#            if not self.paused:
+#                self.x += self.vx * self.direction
+#                if self.direction == 1 and self.x > screen.get_width() + 100:
+#                    self.x = -100
+#                elif self.direction == -1 and self.x < -100:
+#                    self.x = screen.get_width() + 100
+#
+#                self.y += self.vy
+#                if self.y > screen.get_height() - 100:
+#                    self.y = screen.get_height() - 100
+#                    self.vy = -self.vy
+#
+#                self.vy += 5
 
             # Clear Display
             screen.fill((255, 255, 255))  # 255 for white
 
             # Draw the ball
-            pygame.draw.circle(screen, (255, 0, 0), (self.x, self.y), 100)
+            #pygame.draw.circle(screen, (255, 0, 0), (self.x, self.y), 100)
 
             #make the fraction
             level = 1 #for now
@@ -94,8 +95,9 @@ class MiniGameMayhem:
                 self.tempNumPrinted += 1
                 level = 1
 
-            img=pygame.image.load("fractionstitle.png").convert()
-            screen.blit(img,(0,0))
+            #title screen
+            screen.blit(self.fractionsTitle,(0,0))
+
             #print("screenwidth IS : " + str(screen.get_width()))
             #print("screenheighti is : " + str(screen.get_height()))
             #img = pygame.transform.scale(img,(40,50)) #doesnt work
