@@ -11,15 +11,24 @@ class MiniGameMayhem:
     possibleY = [1,2,3,5,7,9,11,13,17,19,23]
     tempNumFracToPrint = 4
     tempNumPrinted = 0;
+    #title screen
     fractionsTitle = pygame.image.load("fractionstitle.png")
     titleButtons = ["startButton", "howToPlay"]
     startButtonOrig = pygame.image.load("startbutton.png")
     startButton = pygame.image.load("startbutton.png")
     #this is default button scale. the bounds are in animate object function
     startButtonScaler = .5
-    buttonIncreasingOrNot = True
-    currentScreen = "title"
     selectedObjectId = 0
+    #selected button increasingOrNot
+    buttonIncreasingOrNot = True
+    #difficulty screen
+    difficultyButtons = ["easy", "medium", "hard"]
+    #howToPlay screen
+    howToPlayButtons = ["back"]
+    #screens: title, howToPlay, difficulty, playing
+    menuScreens = ["title", "howToPlay", "difficulty"]
+    currentScreen = "title"
+    currentMenuSize = len(titleButtons)
 
     startButton = pygame.transform.scale(startButtonOrig,\
         (int(round(startButtonOrig.get_width() * startButtonScaler)), \
@@ -198,9 +207,9 @@ class MiniGameMayhem:
         #titleButtons
         #currentScreen
         if e.currentScreen == "title":
-            if(selectedObjectId == 0): #if selected is startButton
+            if(selectedObjectId[selectedObjectId] == "startButton"): #if selected is startButton
                 e.animateStartButton()
-            elif(selectedObjectId == 1): #if selected is How To Play
+            elif(selectedObjectId[selectedObjectId] == "howToPlay"): #if selected is How To Play
                 pass #TODO: animate how to play button
 
     def animateStartButton(e):
@@ -236,9 +245,44 @@ class MiniGameMayhem:
 
     def kDownPressed(e):
         print("downpressed")
+        if e.isMenuScreen():
+            e.selectedObjectId += 1
+            if(e.selectedObjectId >= len(e.titleButtons)):
+                e.selectedObjectId = 0
+
+    def isMenuScreen(e):
+        if currentScreen in menuScreens:
+            return True
+        else:
+            return False
+
+    def kUpPressed(e):
+        print("enterpressed")
+        if e.isMenuScreen():
+            e.selectedObjectId -= 1
+            if(e.selectedObjectId <= 0):
+                e.selectedObjectId = len(e.titleButtons) - 1
 
     def kEnterPressed(e):
         print("enterpressed")
+        if e.currentScreen == "title":
+            if e.titleButtons[e.selectedObjectId] == "howToPlay":
+                switchToScreen("howToPlay")
+            elif e.titleButtons[e.selectedObjectId] == "startButton":
+                switchToScreen("difficulty")
+
+    def switchToScreen(e, theScreen):
+        e.currentScreen = theScreen
+        selectedObjectId = 0
+        if(theScreen in menuScreens):
+            if theScreen == "title":
+                currentMenuSize = len(titleButtons)
+            elif theScreen == "howToPlay":
+                currentMenuSize = len(howToPlayButtons)
+            elif theScreen == "difficulty":
+                currentMenuSize = len(difficultyButtons)
+        else:
+            currentMenuSize = -1
 
         #old
 #        theButtonScaler = 0.1
