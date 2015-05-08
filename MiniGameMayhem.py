@@ -12,13 +12,17 @@ class MiniGameMayhem:
     tempNumFracToPrint = 4
     tempNumPrinted = 0;
     fractionsTitle = pygame.image.load("fractionstitle.png")
+    startButtonOrig = pygame.image.load("startbutton.png")
     startButton = pygame.image.load("startbutton.png")
+    #this is default button scale. the bounds are in animate object function
+    startButtonScaler = .5
+    buttonIncreasingOrNot = True
     currentScreen = "title"
     selectedObject = "startButton"
 
-    startButton = pygame.transform.scale(startButton,\
-        (int(round(startButton.get_width() * .6)), \
-            int(round(startButton.get_height() * .6))\
+    startButton = pygame.transform.scale(startButtonOrig,\
+        (int(round(startButtonOrig.get_width() * startButtonScaler)), \
+            int(round(startButtonOrig.get_height() * startButtonScaler))\
         )\
     )
 
@@ -115,8 +119,9 @@ class MiniGameMayhem:
 
                 #print("startbuttonwidth: " + str(self.startButton.get_width()))
                 #print("startbuttonheight: " + str(self.startButton.get_height()))
-                if(self.selectedObject == "startButton"):
-                    self.startButton = self.animateButton(self.startButton)
+                #if(self.selectedObject == "startButton"):
+                #animate selected button
+                self.animateObject(self.selectedObject)
 
                 #display start button
                 screen.blit(self.startButton,\
@@ -181,13 +186,43 @@ class MiniGameMayhem:
         print("theFraction.unSimpY = " + str(theFraction.unSimpY))
         pass
 
-    def animateButton(e, theButton):
-        theButton = pygame.transform.scale(theButton,\
-            (int(round(theButton.get_width() * 1.01)), \
-                int(round(theButton.get_height() * 1.01))\
+    def animateObject(e, selectedObject):
+        if(selectedObject == "startButton"):
+            e.animateStartButton()
+
+    def animateStartButton(e):
+        #print("e.startbuttonscaler : " + str(e.startButtonScaler))
+        if(e.startButtonScaler >= .75):
+            #print("here1")
+            e.buttonIncreasingOrNot = False
+        elif(e.startButtonScaler <= .50):
+            #print("here2")
+            e.buttonIncreasingOrNot = True
+        if(e.buttonIncreasingOrNot):
+            #print("here3")
+            e.startButtonScaler += .005
+        else:
+            #print("here4")
+            e.startButtonScaler -= .005
+        e.startButton = pygame.transform.scale(e.startButtonOrig,\
+            (int(round(e.startButtonOrig.get_width() * e.startButtonScaler)), \
+                int(round(e.startButtonOrig.get_height() * e.startButtonScaler))\
             )\
         )
-        return theButton
+
+        #old
+#        theButtonScaler = 0.1
+#        if(selectedObject == "startButton"):
+#            if(e.startButtonScaler > .75):
+#                e.startButtonScaler -= .01
+#            else:
+#                e.startButtonScaler += .01
+#            theButtonScaler = e.startButtonScaler
+#        theButton = pygame.transform.scale(selectedObject,\
+#            (int(round(selectedObjectOrig.get_width() * theButtonScaler)), \
+#                int(round(selectedObjectOrig.get_height() * theButtonScaler))\
+#            )\
+#        )
 
 # This function is called when the game is run directly from the command line:
 # ./TestGame.py
