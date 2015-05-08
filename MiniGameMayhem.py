@@ -13,6 +13,8 @@ class MiniGameMayhem:
     tempNumPrinted = 0;
     fractionsTitle = pygame.image.load("fractionstitle.png")
     startButton = pygame.image.load("startbutton.png")
+    currentScreen = "title"
+    selectedObject = "startButton"
 
     startButton = pygame.transform.scale(startButton,\
         (int(round(startButton.get_width() * .6)), \
@@ -102,18 +104,27 @@ class MiniGameMayhem:
                 self.tempNumPrinted += 1
                 level = 1
 
-            #title screen
-            screen.blit(self.fractionsTitle,(0,0))
-            #startbutton is 366x108, scaled to 183x54, 
-            #print("round blah is: " + str(round(self.startButton.get_height())))
+            self.currentScreen = "title" #for now
 
-            #print("startbuttonwidth: " + str(self.startButton.get_width()))
-            #print("startbuttonheight: " + str(self.startButton.get_height()))
-            screen.blit(self.startButton,\
-                (int(round(screen.get_width()/2 - self.startButton.get_width()/2)),\
-                    int(round(screen.get_height()/2 - self.startButton.get_height()/2)) \
-                )\
-            )
+            #title screen
+            if(self.currentScreen == "title"):
+                #title background
+                screen.blit(self.fractionsTitle,(0,0))
+                #startbutton is 366x108, scaled to 183x54, 
+                #print("round blah is: " + str(round(self.startButton.get_height())))
+
+                #print("startbuttonwidth: " + str(self.startButton.get_width()))
+                #print("startbuttonheight: " + str(self.startButton.get_height()))
+                if(self.selectedObject == "startButton"):
+                    self.startButton = self.animateButton(self.startButton)
+
+                #display start button
+                screen.blit(self.startButton,\
+                    (int(round(screen.get_width()/2 - self.startButton.get_width()/2)),\
+                        int(round(screen.get_height()/2 - self.startButton.get_height()/2)) \
+                    )\
+                )
+
 
             #print("screenwidth IS : " + str(screen.get_width()))
             #print("screenheighti is : " + str(screen.get_height()))
@@ -169,6 +180,14 @@ class MiniGameMayhem:
         print("theFraction.unSimpX = " + str(theFraction.unSimpX))
         print("theFraction.unSimpY = " + str(theFraction.unSimpY))
         pass
+
+    def animateButton(e, theButton):
+        theButton = pygame.transform.scale(theButton,\
+            (int(round(theButton.get_width() * 1.01)), \
+                int(round(theButton.get_height() * 1.01))\
+            )\
+        )
+        return theButton
 
 # This function is called when the game is run directly from the command line:
 # ./TestGame.py
