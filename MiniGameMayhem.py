@@ -94,9 +94,11 @@ class MiniGameMayhem:
                 self.tempNumPrinted += 1
                 level = 1
 
-            #img=pygame.image.load("whiteboard.jpg")
-            #screen.blit(img,(12,12))
-            #img = pygame.transform.scale(img,(40,50))
+            img=pygame.image.load("fractionstitle.png").convert()
+            screen.blit(img,(0,0))
+            #print("screenwidth IS : " + str(screen.get_width()))
+            #print("screenheighti is : " + str(screen.get_height()))
+            #img = pygame.transform.scale(img,(40,50)) #doesnt work
             #print(type(img.get_width))
             #print("width = " + str(img.get_width()))
             #print("height = " + str(img.get_height()))
