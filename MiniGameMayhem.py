@@ -108,6 +108,7 @@ class MiniGameMayhem:
             # Try to stay at 30 FPS
             self.clock.tick(30)
 
+    #returns a Fraction object that is created based on the level.
     def makeFraction(e, level):
         #reference for possibleX/Y. See actual value at beginning of class
         #possibleX = [0,1,2,3,5,7,9,11,13,17,19,23]
