@@ -11,7 +11,14 @@ class MiniGameMayhem:
     possibleY = [1,2,3,5,7,9,11,13,17,19,23]
     tempNumFracToPrint = 4
     tempNumPrinted = 0;
-    fractionsTitle=pygame.image.load("fractionstitle.png")
+    fractionsTitle = pygame.image.load("fractionstitle.png")
+    startButton = pygame.image.load("startbutton.png")
+
+    startButton = pygame.transform.scale(startButton,\
+        (int(round(startButton.get_width() * .6)), \
+            int(round(startButton.get_height() * .6))\
+        )\
+    )
 
     def __init__(self):
         # Set up a clock for managing the frame rate.
@@ -97,6 +104,16 @@ class MiniGameMayhem:
 
             #title screen
             screen.blit(self.fractionsTitle,(0,0))
+            #startbutton is 366x108, scaled to 183x54, 
+            #print("round blah is: " + str(round(self.startButton.get_height())))
+
+            #print("startbuttonwidth: " + str(self.startButton.get_width()))
+            #print("startbuttonheight: " + str(self.startButton.get_height()))
+            screen.blit(self.startButton,\
+                (int(round(screen.get_width()/2 - self.startButton.get_width()/2)),\
+                    int(round(screen.get_height()/2 - self.startButton.get_height()/2)) \
+                )\
+            )
 
             #print("screenwidth IS : " + str(screen.get_width()))
             #print("screenheighti is : " + str(screen.get_height()))
