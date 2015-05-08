@@ -12,13 +12,14 @@ class MiniGameMayhem:
     tempNumFracToPrint = 4
     tempNumPrinted = 0;
     fractionsTitle = pygame.image.load("fractionstitle.png")
+    titleButtons = ["startButton", "howToPlay"]
     startButtonOrig = pygame.image.load("startbutton.png")
     startButton = pygame.image.load("startbutton.png")
     #this is default button scale. the bounds are in animate object function
     startButtonScaler = .5
     buttonIncreasingOrNot = True
     currentScreen = "title"
-    selectedObject = "startButton"
+    selectedObjectId = 0
 
     startButton = pygame.transform.scale(startButtonOrig,\
         (int(round(startButtonOrig.get_width() * startButtonScaler)), \
@@ -67,11 +68,11 @@ class MiniGameMayhem:
                     return
                 elif event.type == pygame.VIDEORESIZE:
                     pygame.display.set_mode(event.size, pygame.RESIZABLE)
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_LEFT:
-                        self.direction = -1
-                    elif event.key == pygame.K_RIGHT:
-                        self.direction = 1
+#                elif event.type == pygame.KEYDOWN:
+#                    if event.key == pygame.K_LEFT:
+#                        self.direction = -1
+#                    elif event.key == pygame.K_RIGHT:
+#                        self.direction = 1
 
             # Move the ball
 #            if not self.paused:
@@ -93,6 +94,10 @@ class MiniGameMayhem:
 
             # Draw the ball
             #pygame.draw.circle(screen, (255, 0, 0), (self.x, self.y), 100)
+
+            #handle events
+            events = pygame.event.get()
+            self.handleEvents(events)
 
             #make the fraction
             level = 1 #for now
@@ -121,7 +126,7 @@ class MiniGameMayhem:
                 #print("startbuttonheight: " + str(self.startButton.get_height()))
                 #if(self.selectedObject == "startButton"):
                 #animate selected button
-                self.animateObject(self.selectedObject)
+                self.animateObject(self.selectedObjectId)
 
                 #display start button
                 screen.blit(self.startButton,\
@@ -129,7 +134,10 @@ class MiniGameMayhem:
                         int(round(screen.get_height()/2 - self.startButton.get_height()/2)) \
                     )\
                 )
-
+            elif(self.currentScreen == "difficulty"): #TODO: this
+                #difficulty background
+                #TODO: blit difficulty background
+                #TODO: blit 3 difficulty buttons
 
             #print("screenwidth IS : " + str(screen.get_width()))
             #print("screenheighti is : " + str(screen.get_height()))
@@ -186,9 +194,14 @@ class MiniGameMayhem:
         print("theFraction.unSimpY = " + str(theFraction.unSimpY))
         pass
 
-    def animateObject(e, selectedObject):
-        if(selectedObject == "startButton"):
-            e.animateStartButton()
+    def animateObject(e, selectedObjectId):
+        titleButtons
+        currentScreen
+        if e.currentScreen == "title":
+            if(selectedObjectId == 0): #if selected is startButton
+                e.animateStartButton()
+            elif(selectedObjectId == 1): #if selected is How To Play
+                pass #TODO: animate how to play button
 
     def animateStartButton(e):
         #print("e.startbuttonscaler : " + str(e.startButtonScaler))
@@ -209,6 +222,11 @@ class MiniGameMayhem:
                 int(round(e.startButtonOrig.get_height() * e.startButtonScaler))\
             )\
         )
+
+    def handleEvents(e, events):
+        for event in events:
+            if event.type == KEYDOWN:
+                if event.key == 
 
         #old
 #        theButtonScaler = 0.1
