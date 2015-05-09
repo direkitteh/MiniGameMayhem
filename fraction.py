@@ -3,3 +3,5 @@ class Fraction(object):
     simpY = None
     unSimpX = None
     unSimpY = None
+    ansX = None
+    ansY = None
