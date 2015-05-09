@@ -237,8 +237,9 @@ class MiniGameMayhem:
 
             #debug tools
             debugOrNot = True
+            tryCatchOrNot = False
             if debugOrNot:
-                self.doTheDebugThing(screen)
+                self.doTheDebugThing(screen, tryCatchOrNot)
 
             # Flip Display (Update the full display Surface to the screen)
             pygame.display.flip()
@@ -246,21 +247,29 @@ class MiniGameMayhem:
             # Try to stay at 30 FPS
             self.clock.tick(30)
 
-    def doTheDebugThing(e, screen):
-        try:
-            myfont = pygame.font.SysFont("monospace", 15)
-            lab = myfont.render("selectedObjectId: " + str(e.selectedObjectId), 1, (255,255,0))
-            screen.blit(lab, (100,100))
-            lab2 = myfont.render("currentScreen: " + e.currentScreen, 1, (255,255,0))
-            screen.blit(lab2, (100,80))
-            lab3 = myfont.render("the selected button: " + \
-                e.getCurrentButtons()[e.selectedObjectId], 1, (255,255,0))
-            screen.blit(lab3, (100,120))
-        except:
-            if(not e.debugErrorOnePrinted):
-                print("ERROR LOLOLOL GIT GUD")
-            e.debugErrorOnePrinted = True
-            pass
+    def doTheDebugThing(e, screen, tryCatchOrNot):
+        if (tryCatchOrNot):
+            try:
+                e.actuallyDoTheDebugThing(screen)
+            except:
+                if(not e.debugErrorOnePrinted):
+                    print("ERROR LOLOLOL GIT GUD")
+                e.debugErrorOnePrinted = True
+        else:
+            e.actuallyDoTheDebugThing(screen)
+
+    def actuallyDoTheDebugThing(e, screen):
+        myfont = pygame.font.SysFont("monospace", 15)
+        lab = myfont.render("selectedObjectId: " + str(e.selectedObjectId), 1, (255,255,0))
+        screen.blit(lab, (100,100))
+        lab2 = myfont.render("currentScreen: " + e.currentScreen, 1, (255,255,0))
+        screen.blit(lab2, (100,80))
+        lab3 = myfont.render("the selected button: " + \
+            e.getCurrentButtons()[e.selectedObjectId], 1, (255,255,0))
+        screen.blit(lab3, (100,120))
+#        lab4 = myfont.render("easyButtonScaler: " + \
+#            str(e.easyButtonScaler), 1 (255,255,0))
+#        screen.blit(lab4, (100,140))
 
     #returns a Fraction object that is created based on the level.
     def makeFraction(e, level):
@@ -318,11 +327,19 @@ class MiniGameMayhem:
     def animateObject(e):
         #titleButtons
         #currentScreen
-        if e.currentScreen == "title":
-            if(e.getCurrentButtons()[e.selectedObjectId] == "startButton"): #if selected is startButton
-                e.animateStartButton()
-            elif(e.getCurrentButtons()[e.selectedObjectId] == "howToPlay"): #if selected is How To Play
-                e.animateHowToPlayButton()
+        #if e.currentScreen == "title":
+        if(e.getCurrentButtons()[e.selectedObjectId] == "startButton"): #if selected is startButton
+            e.animateStartButton()
+        elif(e.getCurrentButtons()[e.selectedObjectId] == "howToPlay"): #if selected is How To Play
+            e.animateHowToPlayButton()
+        elif(e.getCurrentButtons([e.selectedObjectId] == "easy")):
+            e.animateEasyButton()
+        elif(e.getCurrentButtons([e.selectedObjectId] == "medium")):
+            e.animateMediumButton()
+        elif(e.getCurrentButtons([e.selectedObjectId] == "hard")):
+            e.animateHardButton()
+        elif(e.getCurrentButtons([e.selectedObjectId] == "back")):
+            e.animateBackButton()
 
     def animateStartButton(e):
         if(e.startButtonScaler >= .75):
@@ -345,6 +362,50 @@ class MiniGameMayhem:
         else:
             e.howToPlayButtonScaler -= .005
         e.scaleHowToPlayButtonNow()
+
+    def animateEasyButton(e):
+        if(e.easyButtonScaler >= .85):
+            e.buttonIncreasingOrNot = False
+        elif(e.easyButtonScaler <= .65):
+            e.buttonIncreasingOrNot = True
+        if(e.buttonIncreasingOrNot):
+            e.easyButtonScaler += .005
+        else:
+            e.easyButtonScaler -= .005
+        e.scaleEasyButtonNow()
+
+    def animateMediumButton(e):
+        if(e.mediumButtonScaler >= .85):
+            e.buttonIncreasingOrNot = False
+        elif(e.mediumButtonScaler <= .65):
+            e.buttonIncreasingOrNot = True
+        if(e.buttonIncreasingOrNot):
+            e.mediumButtonScaler += .005
+        else:
+            e.easyButtonScaler -= .005
+        e.scaleMediumButtonNow()
+
+    def animateHardButton(e):
+        if(e.hardButtonScaler >= .85):
+            e.buttonIncreasingOrNot = False
+        elif(e.hardButtonScaler <= .65):
+            e.buttonIncreasingOrNot = True
+        if(e.buttonIncreasingOrNot):
+            e.hardButtonScaler += .005
+        else:
+            e.hardButtonScaler -= .005
+        e.scaleHardButtonNow()
+
+    def animateBackButton(e):
+        if(e.backButtonScaler >= .75):
+            e.buttonIncreasingOrNot = False
+        elif(e.backButtonScaler <= .50):
+            e.buttonIncreasingOrNot = True
+        if(e.buttonIncreasingOrNot):
+            e.backButtonScaler += .005
+        else:
+            e.backButtonScaler -= .005
+        e.scaleBackButtonNow()
 
     def scaleAllButtonsNow(e):
         e.scaleStartButtonNow()
