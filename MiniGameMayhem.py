@@ -58,6 +58,7 @@ class MiniGameMayhem:
     #screens: title, howToPlay, difficulty, playing
     menuScreens = ["title", "howToPlay", "difficulty"]
     currentScreen = "title"
+    prevScreen = "title"
     currentMenuSize = len(titleButtons)
 
     startButton = pygame.transform.scale(startButtonOrig,\
@@ -426,13 +427,17 @@ class MiniGameMayhem:
 
     def kEnterPressed(e):
         #print("enterpressed")
-        if e.currentScreen == "title":
-            if e.getCurrentButtons()[e.selectedObjectId] == "howToPlay":
-                e.switchToScreen("howToPlay")
-            elif e.getCurrentButtons()[e.selectedObjectId] == "startButton":
-                e.switchToScreen("difficulty")
+        #if e.currentScreen == "title":
+        if e.getCurrentButtons()[e.selectedObjectId] == "howToPlay":
+            e.switchToScreen("howToPlay")
+        elif e.getCurrentButtons()[e.selectedObjectId] == "startButton":
+            e.switchToScreen("difficulty")
+        elif e.getCurrentButtons()[e.selectedObjectId] == "back":
+            e.switchToScreen("prev")
 
     def switchToScreen(e, theScreen):
+        if theScreen == "prev":
+            theScreen = e.prevScreen
         e.currentScreen = theScreen
         e.selectedObjectId = 0
         if(theScreen in e.menuScreens):
