@@ -5,7 +5,10 @@
 '''
 
 class GameState:
-    def __init__(self):
+    def __init__(self, main, clock, screen):
+        self.main = main
+        self.clock = clock
+        self.screen = screen
         self.paused = False
 
     # Do things on pause and resume
@@ -25,5 +28,5 @@ class GameState:
         pass
 
     # Draw this state
-    def draw(self,screen):
+    def draw(self):
         pass
