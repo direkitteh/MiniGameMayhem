@@ -96,13 +96,13 @@ class Patterns(GameState):
         ], 3,0,0),
         PatternShape("Acute Triangle3", [
             {'x':0, 'y':-3},
-            {'x':2, 'y':-2},
-            {'x':-2, 'y':-2}
+            {'x':-2, 'y':2},
+            {'x':2, 'y':-2}
         ], 3,0,0),
         PatternShape("Acute Triangle4", [
             {'x':-1, 'y':-1},
             {'x':3, 'y':-2},
-            {'x':-2, 'y':-2}
+            {'x':0, 'y':2}
         ], 3,0,0)
     ]
     
@@ -175,6 +175,8 @@ class Patterns(GameState):
         arr = Patterns.SHAPES[ randint(0,len(Patterns.SHAPES)-1) ]
         level.add_shape(arr[ randint(0,len(arr)-1) ])
         level.add_shape(Patterns.SQUARE)
+        level.add_shape(Patterns.AC_TRIANGLES[2])
+        level.add_shape(Patterns.AC_TRIANGLES[3])
         
         level.add_reason("Rawr!")
         level.add_reason("Raaaawr")
