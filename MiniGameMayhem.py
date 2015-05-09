@@ -14,13 +14,23 @@ class MiniGameMayhem:
     #title screen
     fractionsTitle = pygame.image.load("fractionstitle.png")
     titleButtons = ["startButton", "howToPlay"]
-    startButtonOrig = pygame.image.load("startbutton.png")
-    startButton = pygame.image.load("startbutton.png")
-    #this is default button scale. the bounds are in animate object function
+    #startButton
     startButtonScalerOrig = .5
     startButtonScaler = startButtonScalerOrig
+    startButtonOrig = pygame.image.load("startbutton.png")
+    startButton = startButtonOrig
+    #self.scaleStartButtonNow()
+    #TODO: delete this line below this, the uber long one
+    #startButton = pygame.transform.scale(startButtonOrig, (int(round(startButtonOrig.get_width()*startButtonScalerOrig)), int(round(startButtonOrig.get_height()*startButtonScalerOrig))))
+    
+    #howToPlayButton
     howToPlayButtonScalerOrig = .5
     howToPlayButtonScaler = howToPlayButtonScalerOrig
+    howToPlayButtonOrig = pygame.image.load("howToPlayButton.png")
+    howToPlayButton = howToPlayButtonOrig
+    #self.scaleHowToPlayButtonNow()
+    #TODO: delete the line below this, the uber long one
+    #howToPlayButton = pygame.transform.scale(howToPlayButtonOrig, (int(round(howToPlayButtonOrig.get_width()*howToPlayButtonScalerOrig)), int(round(howToPlayButtonOrig.get_height()*howToPlayButtonScalerOrig))))
     selectedObjectId = 0
     #selected button increasingOrNot
     buttonIncreasingOrNot = True
@@ -51,6 +61,8 @@ class MiniGameMayhem:
 
         self.paused = False
         self.direction = 1
+        self.scaleStartButtonNow()
+        self.scaleHowToPlayButtonNow()
 
     def set_paused(self, paused):
         self.paused = paused
@@ -139,7 +151,7 @@ class MiniGameMayhem:
                 #print("startbuttonheight: " + str(self.startButton.get_height()))
                 #if(self.selectedObject == "startButton"):
                 #animate selected button
-                self.animateObject(self.selectedObjectId)
+                self.animateObject()
 
                 #display start button
                 screen.blit(self.startButton,\
@@ -148,7 +160,11 @@ class MiniGameMayhem:
                     )\
                 )
                 #display howToPlay button
-                #TODO:
+                screen.blit(self.howToPlayButton,\
+                    (int(round(screen.get_width()/2 - self.howToPlayButton.get_width()/2)),\
+                        int(round(screen.get_height()/1.6 - self.howToPlayButton.get_height()/2)) \
+                    )\
+                )
             elif(self.currentScreen == "difficulty"): #TODO: this
                 #difficulty background
                 #TODO: blit difficulty background
@@ -216,32 +232,48 @@ class MiniGameMayhem:
         #print("theFraction.unSimpY = " + str(theFraction.unSimpY))
         pass
 
-    def animateObject(e, selectedObjectId):
+    def animateObject(e):
         #titleButtons
         #currentScreen
         if e.currentScreen == "title":
-            if(e.titleButtons[selectedObjectId] == "startButton"): #if selected is startButton
+            if(e.titleButtons[e.selectedObjectId] == "startButton"): #if selected is startButton
                 e.animateStartButton()
-            elif(e.titleButtons[selectedObjectId] == "howToPlay"): #if selected is How To Play
-                pass #TODO: animate how to play button
+            elif(e.titleButtons[e.selectedObjectId] == "howToPlay"): #if selected is How To Play
+                e.animateHowToPlayButton()
 
     def animateStartButton(e):
-        #print("e.startbuttonscaler : " + str(e.startButtonScaler))
         if(e.startButtonScaler >= .75):
-            #print("here1")
             e.buttonIncreasingOrNot = False
         elif(e.startButtonScaler <= .50):
-            #print("here2")
             e.buttonIncreasingOrNot = True
         if(e.buttonIncreasingOrNot):
-            #print("here3")
             e.startButtonScaler += .005
         else:
-            #print("here4")
             e.startButtonScaler -= .005
+        e.scaleStartButtonNow()
+
+    def scaleStartButtonNow(e):
         e.startButton = pygame.transform.scale(e.startButtonOrig,\
             (int(round(e.startButtonOrig.get_width() * e.startButtonScaler)), \
                 int(round(e.startButtonOrig.get_height() * e.startButtonScaler))\
+            )\
+        )
+
+    def animateHowToPlayButton(e):
+        if(e.howToPlayButtonScaler >= .75):
+            e.buttonIncreasingOrNot = False
+        elif(e.howToPlayButtonScaler <= .50):
+            e.buttonIncreasingOrNot = True
+        if(e.buttonIncreasingOrNot):
+            e.howToPlayButtonScaler += .005
+        else:
+            e.howToPlayButtonScaler -= .005
+        e.scaleHowToPlayButtonNow()
+
+    def scaleHowToPlayButtonNow(e):
+        e.howToPlayButton = pygame.transform.scale(e.howToPlayButtonOrig,\
+            (int(round(e.howToPlayButtonOrig.get_width() * e.howToPlayButtonScaler)), \
+                int(round(e.howToPlayButtonOrig.get_height() * e.howToPlayButtonScaler))\
             )\
         )
 
@@ -266,6 +298,7 @@ class MiniGameMayhem:
         #print("downpressed")
         if e.isMenuScreen():
             e.resetCurrentMenuItemSize()
+            e.increasingOrNot = True
             e.selectedObjectId += 1
             if(e.selectedObjectId >= len(e.titleButtons)):
                 e.selectedObjectId = 0
@@ -274,8 +307,10 @@ class MiniGameMayhem:
         if e.currentScreen == "title":
             if(e.titleButtons[e.selectedObjectId] == "startButton"): #if selected is startButton
                 e.startButtonScaler = e.startButtonScalerOrig
+                e.scaleStartButtonNow()
             elif(e.titleButtons[e.selectedObjectId] == "howToPlay"): #if selected is How To Play
-                pass #TODO:
+                e.howToPlayButtonScaler = e.howToPlayButtonScalerOrig
+                e.scaleHowToPlayButtonNow()
 
     def isMenuScreen(e):
         if e.currentScreen in e.menuScreens:
