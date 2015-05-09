@@ -80,30 +80,17 @@ class SequenceGame:
 
     def write_problem(self):
         font = pygame.font.SysFont(None, 32)
-        if self.problem.is_find_equation():
-            # Print equation
-            equation_text = font.render(self.problem.get_equation(), True, Colors.DARK_GREEN)
-            middle = ((self.screen.get_width() // 2) - equation_text.get_width() // 2,
-                      (self.screen.get_height() // 2) - equation_text.get_height() // 2)
-            self.screen.blit(equation_text, middle)
+        # Print equation
+        equation_text = font.render(self.problem.get_equation(), True, Colors.DARK_GREEN)
+        middle = ((self.screen.get_width() // 2) - equation_text.get_width() // 2,
+                  (self.screen.get_height() // 2) - equation_text.get_height() // 2)
+        self.screen.blit(equation_text, middle)
 
-            # Print Sequence
-            sequence_text = font.render(self.problem.get_sequence(), True, Colors.DARK_GREEN)
-            below_middle = ((self.screen.get_width() // 2) - sequence_text.get_width() // 2,
-                            middle[1] + equation_text.get_height() + 20)
-            self.screen.blit(sequence_text, below_middle)
-
-        else:
-            equation_text = font.render(self.problem.get_equation(), True, Colors.DARK_GREEN)
-            middle = ((self.screen.get_width() // 12) - equation_text.get_width() // 2,
-                      (self.screen.get_height() // 2) - equation_text.get_height() // 2)
-            self.screen.blit(equation_text, middle)
-
-            # Print Sequence
-            sequence_text = font.render(self.problem.get_sequence(), True, Colors.DARK_GREEN)
-            below_middle = ((self.screen.get_width() // 2) - sequence_text.get_width() // 2,
-                            middle[1] + equation_text.get_height() + 20)
-            self.screen.blit(sequence_text, below_middle)
+        # Print Sequence
+        sequence_text = font.render(self.problem.get_sequence(), True, Colors.DARK_GREEN)
+        below_middle = ((self.screen.get_width() // 2) - sequence_text.get_width() // 2,
+                        middle[1] + equation_text.get_height() + 20)
+        self.screen.blit(sequence_text, below_middle)
 
     def write_timer(self):
         time_left = int(round(self.time_limit - (time.time() - self.start_time), 0))
@@ -148,37 +135,48 @@ class SequenceGame:
 
 class SequenceProblem:
     def __init__(self, difficulty):
-        # Generate problem here, hardcoded for now
-        self.gen_simple_addition(random.randint(0, 1))
+        self.difficulty = difficulty
+        difficulty_mapping = {
+            1: "+",
+            2: "-",
+            3: "*",
+            4: "/"
+        }
+        operator = difficulty_mapping[self.translate_difficulty()]
+        self.gen_simple(random.randint(0, 1), operator)
 
-    def gen_simple_addition(self, eqn_given):
+    def gen_simple(self, eqn_given, operator):
         increment = random.randint(1, 9)
-        generate_equation = "x+" + str(increment)
+        generate_equation = "x" + operator + str(increment)
         self.sequence = ""
-        x = random.randint(1, 20)
+        x = random.randint(1, 9)
         for i in range(0, 4):
             self.sequence += str(x) + ", "
             x = eval(generate_equation)
         if eqn_given:
-            self.equation = "x + " + str(increment)
+            self.equation = "x " + operator + " " + str(increment)
             self.sequence = self.sequence + "?"
             self.solution = str(x)
         else:
-            self.equation = "x + ?"
+            self.equation = "x " + operator + " ?"
             self.sequence = self.sequence[0:-2]
             self.solution = str(increment)
+
+    def translate_difficulty(self):
+        if self.difficulty < 6:
+            return 1
+        elif self.difficulty >= 6 or self.difficulty < 11:
+            return 2
+        elif self.difficulty >= 11 or self.difficulty < 16:
+            return 3
+        elif self.difficulty >= 16:
+            return 4
 
     def get_sequence(self):
         return self.sequence
 
     def get_equation(self):
         return self.equation
-
-    def is_find_equation(self):
-        return True
-
-    def is_find_sequence(self):
-        return False
 
     def is_correct(self, answer):
         return answer == self.solution
