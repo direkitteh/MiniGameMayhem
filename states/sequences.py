@@ -21,7 +21,9 @@ class SequenceGame:
         self.clock = clock
         self.problem = None
         self.answer_input = None
-        self.time_limit = 10
+        self.time_remaining = 60
+        self.current_difficulty = 11
+        self.score = 0
 
     def start(self):
         self.generate_new()
@@ -29,6 +31,8 @@ class SequenceGame:
         done = False
         self.start_time = time.time()
         while not done:
+            if self.current_difficulty < 1:
+                self.current_difficulty = 1
             self.screen.fill(Colors.WHITE)
             # Events
             events = pygame.event.get()
@@ -39,20 +43,29 @@ class SequenceGame:
                 if event.type == KEYDOWN and event.key == K_ESCAPE:
                     done = True
                 if event.type == KEYDOWN and (event.key == K_RETURN or event.key == K_KP_ENTER):
+                    time_solved = time.time() - self.start_time
+                    self.time_remaining -= time_solved
                     correct = self.problem.is_correct(self.answer_input.get_value())
+                    if correct:
+                        self.update_score(time_solved, self.problem.translate_difficulty())
+                        self.current_difficulty += 1
+                    else:
+                        self.current_difficulty -= 1
                     self.reset(correct)
                     continue
 
             self.answer_input.update(events)
 
-            if (time.time() - self.start_time) >= self.time_limit:
-                self.reset(2)
+            if (time.time() - self.start_time) >= self.time_remaining:
+                self.end_game()
+                break
 
             # Draws
             self.write_header()
             self.write_problem()
             self.draw_answer_input()
             self.write_timer()
+            self.write_score()
 
             pygame.display.flip()
             self.clock.tick(60)
@@ -71,6 +84,22 @@ class SequenceGame:
             pygame.display.flip()
             self.clock.tick(60)
         self.start_time = time.time()
+
+    def end_game(self):
+        start_time = time.time()
+        while (time.time() - start_time) < 5:
+            self.screen.fill(Colors.WHITE)
+            self.write_header()
+            self.write_final_score()
+            pygame.display.flip()
+            self.clock.tick(60)
+
+    def write_final_score(self):
+        font = pygame.font.SysFont(None, 48)
+        text = font.render("Your Score: " + str(self.score), True, Colors.DARK_GREEN)
+        position = ((self.screen.get_width() // 2) - text.get_width() // 2,
+                    (self.screen.get_height() // 2) - text.get_height() // 2)
+        self.screen.blit(text, position)
 
     def write_header(self):
         font = pygame.font.SysFont(None, 48)
@@ -93,9 +122,9 @@ class SequenceGame:
         self.screen.blit(sequence_text, below_middle)
 
     def write_timer(self):
-        time_left = int(round(self.time_limit - (time.time() - self.start_time), 0))
+        time_left = int(round(self.time_remaining - (time.time() - self.start_time), 0))
         font = pygame.font.SysFont(None, 32)
-        percent = (self.time_limit - (time.time() - self.start_time)) / self.time_limit
+        percent = (self.time_remaining - (time.time() - self.start_time)) / self.time_remaining
         if percent > 0.6666:
             color = Colors.GREEN
         elif percent < 0.3333:
@@ -105,6 +134,12 @@ class SequenceGame:
         timer_text = font.render(str(time_left), True, color)
         text_position = ((self.screen.get_width() - timer_text.get_width()) - 10, 10)
         self.screen.blit(timer_text, text_position)
+
+    def write_score(self):
+        font = pygame.font.SysFont(None, 32)
+        score_text = font.render(str(self.score), True, Colors.DARK_GREEN)
+        position = (10, 10)
+        self.screen.blit(score_text, position)
 
     def draw_answer_input(self):
         font = pygame.font.SysFont(None, 32)
@@ -128,13 +163,21 @@ class SequenceGame:
                          self.screen.get_height() - (text.get_height() * 2))
         self.screen.blit(text, text_position)
 
+    def update_score(self, time_solved, difficulty):
+        if time_solved <= 5:
+            time_factor = 1.5
+        else:
+            time_factor = 1
+        self.score += int(100 * difficulty * time_factor)
+
     def generate_new(self):
-        self.problem = SequenceProblem(1)
+        self.problem = SequenceProblem(self.current_difficulty)
         self.answer_input = TextInput(True, self.problem.get_solution_length() + 1, pygame.font.SysFont(None, 32), Colors.DARK_GREEN)
 
 
 class SequenceProblem:
     def __init__(self, difficulty):
+        print "Current Difficulty: " + str(difficulty)
         self.difficulty = difficulty
         difficulty_mapping = {
             1: "+",
@@ -144,13 +187,17 @@ class SequenceProblem:
         }
         operator = difficulty_mapping[self.translate_difficulty()]
         self.gen_simple(random.randint(0, 1), operator)
+        print "Current Answer: " + self.solution
 
     def gen_simple(self, eqn_given, operator):
         increment = random.randint(1, 9)
         generate_equation = "x" + operator + str(increment)
         self.sequence = ""
-        x = random.randint(1, 9)
-        for i in range(0, 4):
+        if operator == "-":
+            x = random.randint(increment * 4, increment * 5)
+        else:
+            x = random.randint(1, 9)
+        for i in range(0, 3):
             self.sequence += str(x) + ", "
             x = eval(generate_equation)
         if eqn_given:
@@ -165,9 +212,9 @@ class SequenceProblem:
     def translate_difficulty(self):
         if self.difficulty < 6:
             return 1
-        elif self.difficulty >= 6 or self.difficulty < 11:
+        elif self.difficulty >= 6 and self.difficulty < 11:
             return 2
-        elif self.difficulty >= 11 or self.difficulty < 16:
+        elif self.difficulty >= 11 and self.difficulty < 16:
             return 3
         elif self.difficulty >= 16:
             return 4
