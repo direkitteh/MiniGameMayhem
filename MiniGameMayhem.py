@@ -12,12 +12,12 @@ class MiniGameMayhem:
     tempNumFracToPrint = 4
     tempNumPrinted = 0;
     #title screen
-    fractionsTitle = pygame.image.load("fractionstitle.png")
+    fractionsTitle = pygame.image.load("fractionimages/fractionstitle.png")
     titleButtons = ["startButton", "howToPlay"]
     #startButton
     startButtonScalerOrig = .5
     startButtonScaler = startButtonScalerOrig
-    startButtonOrig = pygame.image.load("startbutton.png")
+    startButtonOrig = pygame.image.load("fractionimages/startbutton.png")
     startButton = startButtonOrig
     #self.scaleStartButtonNow()
     #TODO: delete this line below this, the uber long one
@@ -26,7 +26,7 @@ class MiniGameMayhem:
     #howToPlayButton
     howToPlayButtonScalerOrig = .5
     howToPlayButtonScaler = howToPlayButtonScalerOrig
-    howToPlayButtonOrig = pygame.image.load("howToPlayButton.png")
+    howToPlayButtonOrig = pygame.image.load("fractionimages/howToPlayButton.png")
     howToPlayButton = howToPlayButtonOrig
     #self.scaleHowToPlayButtonNow()
     #TODO: delete the line below this, the uber long one
@@ -36,6 +36,23 @@ class MiniGameMayhem:
     buttonIncreasingOrNot = True
     #difficulty screen
     difficultyButtons = ["easy", "medium", "hard", "back"]
+    easyButtonScalerOrig = .65
+    easyButtonScaler = easyButtonScalerOrig
+    easyButtonOrig = pygame.image.load("fractionimages/easy.png")
+    easyButton = easyButtonOrig
+    mediumButtonScalerOrig = .65
+    mediumButtonScaler = mediumButtonScalerOrig
+    mediumButtonOrig = pygame.image.load("fractionimages/medium.png")
+    mediumButton = mediumButtonOrig
+    hardButtonScalerOrig = .65
+    hardButtonScaler = hardButtonScalerOrig
+    hardButtonOrig = pygame.image.load("fractionimages/hard.png")
+    hardButton = hardButtonOrig
+    backButtonScalerOrig = .5
+    backButtonScaler = backButtonScalerOrig
+    backButtonOrig = pygame.image.load("fractionimages/back.png")
+    backButton = backButtonOrig
+
     #howToPlay screen
     howToPlayButtons = ["back"]
     #screens: title, howToPlay, difficulty, playing
@@ -61,8 +78,7 @@ class MiniGameMayhem:
 
         self.paused = False
         self.direction = 1
-        self.scaleStartButtonNow()
-        self.scaleHowToPlayButtonNow()
+        self.scaleAllButtonsNow()
 
     def set_paused(self, paused):
         self.paused = paused
@@ -165,17 +181,33 @@ class MiniGameMayhem:
                         int(round(screen.get_height()/1.6 - self.howToPlayButton.get_height()/2)) \
                     )\
                 )
-            elif(self.currentScreen == "difficulty"): #TODO: this
-                #difficulty background
-                #TODO: blit difficulty background
-                #TODO: blit 3 difficulty buttons
-                pass
-
-            elif(self.currentScreen == "howToPlay"): #TODO: this
-                #howtoplay background
-                #blit background
-                #blit 3 difficulty buttons
-                pass
+            elif(self.currentScreen == "difficulty"):
+                screen.blit(self.easyButton,\
+                    (int(round(screen.get_width()/2 - self.easyButton.get_width()/2)),\
+                        int(round(screen.get_height()/5 - self.easyButton.get_height()/2))
+                    )\
+                )
+                screen.blit(self.mediumButton,\
+                    (int(round(screen.get_width()/2 - self.mediumButton.get_width()/2)),\
+                        int(round(screen.get_height()/4 + 100 - self.mediumButton.get_height()/2))
+                    )\
+                )
+                screen.blit(self.hardButton,\
+                    (int(round(screen.get_width()/2 - self.hardButton.get_width()/2)),\
+                        int(round(screen.get_height()/3 + 200 - self.hardButton.get_height()/2))
+                    )\
+                )
+                screen.blit(self.backButton,\
+                    (int(round(screen.get_width()/2 - self.backButton.get_width()/2)),\
+                        int(round(screen.get_height()/1.2 - self.backButton.get_height()/2))
+                    )\
+                )
+            elif(self.currentScreen == "howToPlay"):
+                screen.blit(self.backButton,\
+                    (int(round(screen.get_width()/2 - self.backButton.get_width()/2)),\
+                        int(round(screen.get_height()/1.2 - self.backButton.get_height()/2))
+                    )\
+                )
 
             #print("screenwidth IS : " + str(screen.get_width()))
             #print("screenheighti is : " + str(screen.get_height()))
@@ -271,13 +303,6 @@ class MiniGameMayhem:
             e.startButtonScaler -= .005
         e.scaleStartButtonNow()
 
-    def scaleStartButtonNow(e):
-        e.startButton = pygame.transform.scale(e.startButtonOrig,\
-            (int(round(e.startButtonOrig.get_width() * e.startButtonScaler)), \
-                int(round(e.startButtonOrig.get_height() * e.startButtonScaler))\
-            )\
-        )
-
     def animateHowToPlayButton(e):
         if(e.howToPlayButtonScaler >= .75):
             e.buttonIncreasingOrNot = False
@@ -289,10 +314,53 @@ class MiniGameMayhem:
             e.howToPlayButtonScaler -= .005
         e.scaleHowToPlayButtonNow()
 
+    def scaleAllButtonsNow(e):
+        e.scaleStartButtonNow()
+        e.scaleHowToPlayButtonNow()
+        e.scaleEasyButtonNow()
+        e.scaleMediumButtonNow()
+        e.scaleHardButtonNow()
+        e.scaleBackButtonNow()
+
+    def scaleStartButtonNow(e):
+        e.startButton = pygame.transform.scale(e.startButtonOrig,\
+            (int(round(e.startButtonOrig.get_width() * e.startButtonScaler)), \
+                int(round(e.startButtonOrig.get_height() * e.startButtonScaler))\
+            )\
+        )
+
     def scaleHowToPlayButtonNow(e):
         e.howToPlayButton = pygame.transform.scale(e.howToPlayButtonOrig,\
             (int(round(e.howToPlayButtonOrig.get_width() * e.howToPlayButtonScaler)), \
                 int(round(e.howToPlayButtonOrig.get_height() * e.howToPlayButtonScaler))\
+            )\
+        )
+
+    def scaleEasyButtonNow(e):
+        e.easyButton = pygame.transform.scale(e.easyButtonOrig,\
+            (int(round(e.easyButtonOrig.get_width() * e.easyButtonScaler)), \
+                int(round(e.easyButtonOrig.get_height() * e.easyButtonScaler))\
+            )\
+        )
+
+    def scaleMediumButtonNow(e):
+        e.mediumButton = pygame.transform.scale(e.mediumButtonOrig,\
+            (int(round(e.mediumButtonOrig.get_width() * e.mediumButtonScaler)), \
+                int(round(e.mediumButtonOrig.get_height() * e.mediumButtonScaler))\
+            )\
+        )
+
+    def scaleHardButtonNow(e):
+        e.hardButton = pygame.transform.scale(e.hardButtonOrig,\
+            (int(round(e.hardButtonOrig.get_width() * e.hardButtonScaler)), \
+                int(round(e.hardButtonOrig.get_height() * e.hardButtonScaler))\
+            )\
+        )
+
+    def scaleBackButtonNow(e):
+        e.backButton = pygame.transform.scale(e.backButtonOrig,\
+            (int(round(e.backButtonOrig.get_width() * e.backButtonScaler)), \
+                int(round(e.backButtonOrig.get_height() * e.backButtonScaler))\
             )\
         )
 
