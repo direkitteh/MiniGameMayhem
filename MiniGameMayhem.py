@@ -35,7 +35,7 @@ class MiniGameMayhem:
     #selected button increasingOrNot
     buttonIncreasingOrNot = True
     #difficulty screen
-    difficultyButtons = ["easy", "medium", "hard"]
+    difficultyButtons = ["easy", "medium", "hard", "back"]
     #howToPlay screen
     howToPlayButtons = ["back"]
     #screens: title, howToPlay, difficulty, playing
@@ -207,6 +207,7 @@ class MiniGameMayhem:
                 e.getCurrentButtons()[e.selectedObjectId], 1, (255,255,0))
             screen.blit(lab3, (100,120))
         except:
+            print("ERROR LOLOLOL GIT GUD")
             pass
 
     #returns a Fraction object that is created based on the level.
@@ -348,18 +349,19 @@ class MiniGameMayhem:
         #print("uppressed")
         if e.isMenuScreen():
             e.resetCurrentMenuItemSize()
+            e.increasingOrNot = True
             #print("subtracting 1")
             e.selectedObjectId -= 1
             if(e.selectedObjectId < 0):
                 #print("len of title buttons: " + str(len(e.titleButtons)))
-                e.selectedObjectId = len(e.titleButtons) - 1
+                e.selectedObjectId = len(e.getCurrentButtons()) - 1
 
     def kEnterPressed(e):
         #print("enterpressed")
         if e.currentScreen == "title":
-            if e.titleButtons[e.selectedObjectId] == "howToPlay":
+            if e.getCurrentButtons()[e.selectedObjectId] == "howToPlay":
                 e.switchToScreen("howToPlay")
-            elif e.titleButtons[e.selectedObjectId] == "startButton":
+            elif e.getCurrentButtons()[e.selectedObjectId] == "startButton":
                 e.switchToScreen("difficulty")
 
     def switchToScreen(e, theScreen):
