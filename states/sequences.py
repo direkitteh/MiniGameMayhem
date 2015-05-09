@@ -293,4 +293,4 @@ def main():
     game = SequenceGame(screen, clock)
     game.start()
 
-main()
+#main()
