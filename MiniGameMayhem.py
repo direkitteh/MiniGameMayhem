@@ -119,7 +119,7 @@ class MiniGameMayhem:
                 return
 
             # Clear Display
-            screen.fill((255, 255, 255))  # 255 for white
+            screen.fill((2, 120, 120))  # 255 for white
 
             # Draw the ball
             #pygame.draw.circle(screen, (255, 0, 0), (self.x, self.y), 100)
@@ -138,7 +138,7 @@ class MiniGameMayhem:
                 self.tempNumPrinted += 1
                 level = 1
 
-            self.currentScreen = "title" #for now
+            #self.currentScreen = "title" #for now
 
             #title screen
             if(self.currentScreen == "title"):
@@ -171,6 +171,12 @@ class MiniGameMayhem:
                 #TODO: blit 3 difficulty buttons
                 pass
 
+            elif(self.currentScreen == "howToPlay"): #TODO: this
+                #howtoplay background
+                #blit background
+                #blit 3 difficulty buttons
+                pass
+
             #print("screenwidth IS : " + str(screen.get_width()))
             #print("screenheighti is : " + str(screen.get_height()))
             #img = pygame.transform.scale(img,(40,50)) #doesnt work
@@ -180,16 +186,28 @@ class MiniGameMayhem:
             #print(type(img))
 
             #debug tools
-            myfont = pygame.font.SysFont("monospace", 15)
-            lab = myfont.render("selectedObjectId: " + str(self.selectedObjectId), 1, (255,255,0))
-            screen.blit(lab, (100,100))
-
+            debugOrNot = True
+            if debugOrNot:
+                self.doTheDebugThing(screen)
 
             # Flip Display (Update the full display Surface to the screen)
             pygame.display.flip()
 
             # Try to stay at 30 FPS
             self.clock.tick(30)
+
+    def doTheDebugThing(e, screen):
+        try:
+            myfont = pygame.font.SysFont("monospace", 15)
+            lab = myfont.render("selectedObjectId: " + str(e.selectedObjectId), 1, (255,255,0))
+            screen.blit(lab, (100,100))
+            lab2 = myfont.render("currentScreen: " + e.currentScreen, 1, (255,255,0))
+            screen.blit(lab2, (100,80))
+            lab3 = myfont.render("the selected button: " + \
+                e.getCurrentButtons()[e.selectedObjectId], 1, (255,255,0))
+            screen.blit(lab3, (100,120))
+        except:
+            pass
 
     #returns a Fraction object that is created based on the level.
     def makeFraction(e, level):
@@ -236,9 +254,9 @@ class MiniGameMayhem:
         #titleButtons
         #currentScreen
         if e.currentScreen == "title":
-            if(e.titleButtons[e.selectedObjectId] == "startButton"): #if selected is startButton
+            if(e.getCurrentButtons()[e.selectedObjectId] == "startButton"): #if selected is startButton
                 e.animateStartButton()
-            elif(e.titleButtons[e.selectedObjectId] == "howToPlay"): #if selected is How To Play
+            elif(e.getCurrentButtons()[e.selectedObjectId] == "howToPlay"): #if selected is How To Play
                 e.animateHowToPlayButton()
 
     def animateStartButton(e):
@@ -300,8 +318,16 @@ class MiniGameMayhem:
             e.resetCurrentMenuItemSize()
             e.increasingOrNot = True
             e.selectedObjectId += 1
-            if(e.selectedObjectId >= len(e.titleButtons)):
+            if(e.selectedObjectId >= len(e.getCurrentButtons())):
                 e.selectedObjectId = 0
+
+    def getCurrentButtons(e):
+        if e.currentScreen == "title":
+            return e.titleButtons
+        elif e.currentScreen == "difficulty":
+            return e.difficultyButtons
+        elif e.currentScreen == "howToPlay":
+            return e.howToPlayButtons
 
     def resetCurrentMenuItemSize(e):
         if e.currentScreen == "title":
@@ -332,22 +358,22 @@ class MiniGameMayhem:
         #print("enterpressed")
         if e.currentScreen == "title":
             if e.titleButtons[e.selectedObjectId] == "howToPlay":
-                switchToScreen("howToPlay")
+                e.switchToScreen("howToPlay")
             elif e.titleButtons[e.selectedObjectId] == "startButton":
-                switchToScreen("difficulty")
+                e.switchToScreen("difficulty")
 
     def switchToScreen(e, theScreen):
         e.currentScreen = theScreen
-        selectedObjectId = 0
-        if(theScreen in menuScreens):
+        e.selectedObjectId = 0
+        if(theScreen in e.menuScreens):
             if theScreen == "title":
-                currentMenuSize = len(titleButtons)
+                e.currentMenuSize = len(e.titleButtons)
             elif theScreen == "howToPlay":
-                currentMenuSize = len(howToPlayButtons)
+                e.currentMenuSize = len(e.howToPlayButtons)
             elif theScreen == "difficulty":
-                currentMenuSize = len(difficultyButtons)
+                e.currentMenuSize = len(e.difficultyButtons)
         else:
-            currentMenuSize = -1
+            e.currentMenuSize = -1
 
         #old
 #        theButtonScaler = 0.1
