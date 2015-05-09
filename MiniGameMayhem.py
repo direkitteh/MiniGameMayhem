@@ -60,6 +60,7 @@ class MiniGameMayhem:
     currentScreen = "title"
     prevScreen = "title"
     currentMenuSize = len(titleButtons)
+    debugErrorOnePrinted = False
 
     startButton = pygame.transform.scale(startButtonOrig,\
         (int(round(startButtonOrig.get_width() * startButtonScaler)), \
@@ -141,20 +142,6 @@ class MiniGameMayhem:
             # Draw the ball
             #pygame.draw.circle(screen, (255, 0, 0), (self.x, self.y), 100)
 
-            #make the fraction
-            level = 1 #for now
-            while(self.tempNumPrinted < self.tempNumFracToPrint):
-                theFraction = self.makeFraction(level)
-                self.drawFraction(theFraction)
-                level = 2
-                theFraction = self.makeFraction(level)
-                self.drawFraction(theFraction)
-                level = 3
-                theFraction = self.makeFraction(level)
-                self.drawFraction(theFraction)
-                self.tempNumPrinted += 1
-                level = 1
-
             #self.currentScreen = "title" #for now
 
             #title screen
@@ -209,7 +196,30 @@ class MiniGameMayhem:
                         int(round(screen.get_height()/1.2 - self.backButton.get_height()/2))
                     )\
                 )
-
+            elif self.currentScreen == "easy" or \
+                self.currentScreen == "medium" or \
+                    self.currentScreen == "hard":
+                if self.currentScreen == "easy":
+                    level = 1
+                elif self.currentScreen == "medium":
+                    level = 2
+                elif self.currentScreen == "hard":
+                    level = 3
+                else:
+                    print("error, currentScreen not providing level properly")
+                #make the fraction
+                #level = 1 #for now
+                while(self.tempNumPrinted < self.tempNumFracToPrint):
+                    theFraction = self.makeFraction(level)
+                    self.drawFraction(theFraction)
+                    level = 2
+                    theFraction = self.makeFraction(level)
+                    self.drawFraction(theFraction)
+                    level = 3
+                    theFraction = self.makeFraction(level)
+                    self.drawFraction(theFraction)
+                    self.tempNumPrinted += 1
+                    level = 1
             #print("screenwidth IS : " + str(screen.get_width()))
             #print("screenheighti is : " + str(screen.get_height()))
             #img = pygame.transform.scale(img,(40,50)) #doesnt work
@@ -240,7 +250,9 @@ class MiniGameMayhem:
                 e.getCurrentButtons()[e.selectedObjectId], 1, (255,255,0))
             screen.blit(lab3, (100,120))
         except:
-            print("ERROR LOLOLOL GIT GUD")
+            if(not e.debugErrorOnePrinted):
+                print("ERROR LOLOLOL GIT GUD")
+            e.debugErrorOnePrinted = True
             pass
 
     #returns a Fraction object that is created based on the level.
@@ -278,10 +290,10 @@ class MiniGameMayhem:
 
     #TODO: finish this rather than just print the values
     def drawFraction(e, theFraction):
-        #print("theFraction.simpX = " + str(theFraction.simpX))
-        #print("theFraction.simpY = " + str(theFraction.simpY))
-        #print("theFraction.unSimpX = " + str(theFraction.unSimpX))
-        #print("theFraction.unSimpY = " + str(theFraction.unSimpY))
+        print("theFraction.simpX = " + str(theFraction.simpX))
+        print("theFraction.simpY = " + str(theFraction.simpY))
+        print("theFraction.unSimpX = " + str(theFraction.unSimpX))
+        print("theFraction.unSimpY = " + str(theFraction.unSimpY))
         pass
 
     def animateObject(e):
@@ -428,12 +440,21 @@ class MiniGameMayhem:
     def kEnterPressed(e):
         #print("enterpressed")
         #if e.currentScreen == "title":
-        if e.getCurrentButtons()[e.selectedObjectId] == "howToPlay":
-            e.switchToScreen("howToPlay")
-        elif e.getCurrentButtons()[e.selectedObjectId] == "startButton":
-            e.switchToScreen("difficulty")
-        elif e.getCurrentButtons()[e.selectedObjectId] == "back":
-            e.switchToScreen("prev")
+        try:
+            if e.getCurrentButtons()[e.selectedObjectId] == "howToPlay":
+                e.switchToScreen("howToPlay")
+            elif e.getCurrentButtons()[e.selectedObjectId] == "startButton":
+                e.switchToScreen("difficulty")
+            elif e.getCurrentButtons()[e.selectedObjectId] == "back":
+                e.switchToScreen("prev")
+            elif e.getCurrentButtons()[e.selectedObjectId] == "easy":
+                e.switchToScreen("easy")
+            elif e.getCurrentButtons()[e.selectedObjectId] == "medium":
+                e.switchToScreen("medium")
+            elif e.getCurrentButtons()[e.selectedObjectId] == "hard":
+                e.switchToScreen("hard")
+        except:
+            print("error? enter pressed while playing")
 
     def switchToScreen(e, theScreen):
         if theScreen == "prev":
