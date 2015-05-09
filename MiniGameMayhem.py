@@ -61,6 +61,8 @@ class MiniGameMayhem:
     prevScreen = "title"
     currentMenuSize = len(titleButtons)
     debugErrorOnePrinted = False
+    startPrintY = 160 #TEMPORARY TO PRINT FRACTIONS AS TEXT IN GAME
+    fractionsToDraw = []
 
     startButton = pygame.transform.scale(startButtonOrig,\
         (int(round(startButtonOrig.get_width() * startButtonScaler)), \
@@ -209,17 +211,22 @@ class MiniGameMayhem:
                     print("error, currentScreen not providing level properly")
                 #make the fraction
                 #level = 1 #for now
+                self.startPrintY = 160 #TODO: for now
                 while(self.tempNumPrinted < self.tempNumFracToPrint):
+                    print("level is: " + str(level))
                     theFraction = self.makeFraction(level)
-                    self.drawFraction(theFraction)
-                    level = 2
-                    theFraction = self.makeFraction(level)
-                    self.drawFraction(theFraction)
-                    level = 3
-                    theFraction = self.makeFraction(level)
-                    self.drawFraction(theFraction)
+                    self.fractionsToDraw.append(theFraction)
+                    #self.drawFraction(theFraction, screen)
+                    #level = 2
+                    #theFraction = self.makeFraction(level)
+                    #self.drawFraction(theFraction)
+                    #level = 3
+                    #theFraction = self.makeFraction(level)
+                    #self.drawFraction(theFraction)
                     self.tempNumPrinted += 1
-                    level = 1
+                    #level = 1
+                for aFrac in self.fractionsToDraw:
+                    self.drawFraction(aFrac, screen)
             #print("screenwidth IS : " + str(screen.get_width()))
             #print("screenheighti is : " + str(screen.get_height()))
             #img = pygame.transform.scale(img,(40,50)) #doesnt work
@@ -289,12 +296,24 @@ class MiniGameMayhem:
         return theFraction
 
     #TODO: finish this rather than just print the values
-    def drawFraction(e, theFraction):
-        print("theFraction.simpX = " + str(theFraction.simpX))
-        print("theFraction.simpY = " + str(theFraction.simpY))
-        print("theFraction.unSimpX = " + str(theFraction.unSimpX))
-        print("theFraction.unSimpY = " + str(theFraction.unSimpY))
-        pass
+    def drawFraction(e, theFraction, theScreen):
+        bla1 = "theFraction.simpX = " + str(theFraction.simpX)
+        bla2 = "theFraction.simpY = " + str(theFraction.simpY)
+        bla3 = "theFraction.unSimpX = " + str(theFraction.unSimpX)
+        bla4 = "theFraction.unSimpY = " + str(theFraction.unSimpY)
+        myfont = pygame.font.SysFont("monospace", 22)
+        lab1 = myfont.render(bla1, 1, (255,255,0))
+        lab2 = myfont.render(bla2, 1, (255,255,0))
+        lab3 = myfont.render(bla3, 1, (255,255,0))
+        lab4 = myfont.render(bla4, 1, (255,255,0))
+        theScreen.blit(lab1, (200,e.startPrintY))
+        e.startPrintY += 20
+        theScreen.blit(lab2, (200,e.startPrintY))
+        e.startPrintY += 20
+        theScreen.blit(lab3, (200,e.startPrintY))
+        e.startPrintY += 20
+        theScreen.blit(lab4, (200,e.startPrintY))
+        e.startPrintY += 20
 
     def animateObject(e):
         #titleButtons
