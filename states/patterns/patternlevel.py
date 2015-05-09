@@ -9,7 +9,8 @@ from gamestate import *
 # so that it may be compared to others
 class PatternLevel:
     
-    def __init__(self):
+    def __init__(self, patState):
+        self.patState = patState
         self.question = ""
         self.shapes = []
         self.shapeAnswer = -1
@@ -19,6 +20,7 @@ class PatternLevel:
         self.shapeSelected = -1
         self.reasonSelected = -1
         self.checkHighlighted = False
+        self.answerSubmitted = False
         pass
     
     def set_question(self, question):
@@ -30,14 +32,45 @@ class PatternLevel:
     
     def update(self):
         if(self.checkHighlighted and pygame.mouse.get_pressed()[0]):
-            #boop = ""
+            self.answerSubmitted = True
             pass
     
     def draw(self, screen):
+        if(self.answerSubmitted):
+            self.draw_level(screen)
+        else:
+            self.draw_submit(screen)
+    
+    def draw_submit(self,screen):
+        labelfont = pygame.font.SysFont(None, 36)
+        font = pygame.font.SysFont(None, 32)
+        width = screen.get_width()
+        height = screen.get_height()
+        centerY = height/3
+        color = [120,120,120]
+        
+        # draw background
+        pygame.draw.rect(screen, [200,200,200], [width/2-300, centerY-200,600,400])
+        draw_cen_text("Correct Answer:", screen, labelfont, [0,0,0], [width/2, centerY -180])
+        
+        # draw correct shape
+        shape = self.shapes[self.shapeAnswer]
+        shape.draw_shape(screen, color , width/2, centerY-120, 30)
+        draw_cen_text(shape.name, screen, font, color, [width/2, centerY-80])
+        
+        # draw correct answer
+        draw_cen_text("Reason:", screen, labelfont, [0,0,0], [width/2, centerY -40])
+        draw_cen_text(self.reasons[self.reasonAnswer], screen, font, color, [width/2, centerY - 20])
+        
+        # draw red or green based on submission and awarded points
+        # draw total score
+        # draw next level button
+        pass
+    
+    def draw_level(self, screen):
         font = pygame.font.SysFont(None, 32)
         selectedFont = pygame.font.SysFont(None, 32)
         selectedFont.set_underline(True)
-        
         mousePos = pygame.mouse.get_pos()
         
         width = screen.get_width()
@@ -128,6 +161,11 @@ class PatternLevel:
         screen.blit(checkBlit, [width/2 - checkTextDim[0]/2, checkRect[1]+10]) 
 
         pass
+    
+def draw_cen_text(text, screen, font, color, pos):
+    dim = font.size(text)
+    ren = font.render(text, True, color)
+    screen.blit(ren, [pos[0] - dim[0]/2, pos[1] - dim[1]/2])
 
 def mouse_in_rect(mousePos, rect):
     return (mousePos[0] >= rect[0] and mousePos[1] >= rect[1] and mousePos[0] < (rect[0]+rect[2]) and mousePos[1] < (rect[1]+rect[3]))

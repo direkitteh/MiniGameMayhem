@@ -158,12 +158,13 @@ class Patterns(GameState):
         GameState.__init__(self, main, clock, screen)
         self.font = pygame.font.SysFont("monospace", 25)
         self.make_level();
+        self.score = 0
         pass
 
     # Called to make this round's puzzle
     def make_level(self):
     
-        level = PatternLevel()
+        level = PatternLevel(self)
         level.set_question("Rawr rawr rawr rawr?")
         
         arr = Patterns.SHAPES[ randint(0,len(Patterns.SHAPES)-1) ]
