@@ -48,23 +48,44 @@ class PatternLevel:
         height = screen.get_height()
         centerY = height/3
         color = [120,120,120]
+        mousePos = pygame.mouse.get_pos()
         
         # draw background
         pygame.draw.rect(screen, [200,200,200], [width/2-300, centerY-200,600,400])
-        draw_cen_text("Correct Answer:", screen, labelfont, [0,0,0], [width/2, centerY -180])
+        draw_cen_text("Correct Answer:", screen, labelfont, [0,0,0], [width/2, centerY -170])
         
         # draw correct shape
         shape = self.shapes[self.shapeAnswer]
-        shape.draw_shape(screen, color , width/2, centerY-120, 30)
-        draw_cen_text(shape.name, screen, font, color, [width/2, centerY-80])
+        shape.draw_shape(screen, color , width/2, centerY-90, 30)
+        draw_cen_text(shape.name, screen, font, color, [width/2, centerY-40])
         
         # draw correct answer
-        draw_cen_text("Reason:", screen, labelfont, [0,0,0], [width/2, centerY -40])
-        draw_cen_text(self.reasons[self.reasonAnswer], screen, font, color, [width/2, centerY - 20])
+        draw_cen_text("Reason:", screen, labelfont, [0,0,0], [width/2, centerY - 0])
+        draw_cen_text(self.reasons[self.reasonAnswer], screen, font, color, [width/2, centerY + 40])
         
         # draw red or green based on submission and awarded points
+        
+        
         # draw total score
+        
+        
+        
         # draw next level button
+        contText = "Continue"
+        contBlit = font.render(contText, True, [0,0,0])
+        contTextDim = font.size(contText)
+        contRect = [width/2-contTextDim[0]/2-10, centerY + 100 + len(self.reasons)*(contTextDim[1]+15) + 15, contTextDim[0]+20, contTextDim[1]+20]
+        
+        contBGColor = [200,200,200]
+        if(mouse_in_rect(mousePos,contRect)):
+            contBGColor = [0,240,240]
+
+            self.contHighlighted = True
+        else:
+            self.contHighlighted = False
+        pygame.draw.rect(screen, contBGColor, contRect)
+        screen.blit(contBlit, [width/2 - contTextDim[0]/2, contRect[1]+10]) 
+        
         pass
     
     def draw_level(self, screen):
