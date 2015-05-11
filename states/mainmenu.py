@@ -39,7 +39,8 @@ class MainMenu(GameState):
                     pass
                 elif event.key == pygame.K_3:
                     # Switch state to patterns game
-                    self.main.set_gamestate(Patterns(self.main, self.clock, self.screen))
+                    game = Patterns(self.clock, self.screen)
+                    game.start()
                     pass
                 elif event.key == pygame.K_4:
                     # Switch state to angles game

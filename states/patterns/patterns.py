@@ -2,6 +2,7 @@ import pygame
 from gi.repository import Gtk
 from .patternshape import *
 from .patternlevel import *
+from pygame.locals import *
 from random import randint
 
 from gamestate import *
@@ -154,13 +155,33 @@ class Patterns(GameState):
     
     SHAPES = [RECTANGLES, RHOMBUSES, AC_TRIANGLES, OB_TRIANGLES, RT_TRIANGLES, [SQUARE, EQ_TRIANGLE, HEXAGON]]
         
-    def __init__(self, main, clock, screen):
-        GameState.__init__(self, main, clock, screen)
+    def __init__(self, clock, screen):
+        GameState.__init__(self, clock, screen)
         self.font = pygame.font.SysFont("monospace", 25)
         self.make_level();
         self.score = 0
         pass
 
+
+    # Run the menu
+    def start(self):
+        self.running = True
+        while self.running:
+            events = events = pygame.event.get()
+            self.update(events)
+            self.screen.fill([255,255,255])
+            self.draw()
+            events = pygame.event.get()
+
+            for event in events:
+                if event.type == QUIT:
+                    self.running = False
+                if event.type == KEYDOWN and event.key == K_ESCAPE:
+                    self.running = False
+                    
+            pygame.display.flip()
+            self.clock.tick(60)
+            
     # Called to make this round's puzzle
     def make_level(self):
     
