@@ -31,25 +31,25 @@ class Patterns(GameState):
     ], 6,0,3)
     
     RECTANGLES = [ # mutations of a rectangle
-        PatternShape("Rectangle", [
+        PatternShape("Rectangle1", [
             {'x':-2,'y':-0.5},
             {'x':2, 'y':-0.5},
             {'x':2, 'y':0.5},
             {'x':-2,'y':0.5}
         ], 4, 4, 2),
-        PatternShape("Rectangle", [
+        PatternShape("Rectangle2", [
             {'x':-1.5,'y':-1},
             {'x':1.5, 'y':-1},
             {'x':1.5, 'y':1},
             {'x':-1.5,'y':1}
         ], 4, 4, 2),
-        PatternShape("Rectangle", [
+        PatternShape("Rectangle3", [
             {'x':-1,'y':-1.5},
             {'x':1, 'y':-1.5},
             {'x':1, 'y':1.5},
             {'x':-1,'y':1.5}
         ], 4, 4, 2),
-        PatternShape("Rectangle", [
+        PatternShape("Rectangle4", [
             {'x':-2,'y':-0.5},
             {'x':2, 'y':-0.5},
             {'x':2, 'y':0.5},
@@ -57,25 +57,25 @@ class Patterns(GameState):
         ], 4, 4, 2),
     ]
     RHOMBUSES = [
-        PatternShape("Rhombus", [
+        PatternShape("Rhombus1", [
             {'x': 2, 'y':-1},
             {'x':-0.25, 'y':-1},
             {'x':-2, 'y':1},
             {'x':0.25, 'y':1}
         ], 4, 0, 2),
-        PatternShape("Rhombus", [
+        PatternShape("Rhombus2", [
             {'y': 2, 'x':-1},
             {'y':-0.25, 'x':-1},
             {'y':-2, 'x':1},
             {'y':0.25, 'x':1}
         ], 4, 0, 2),
-        PatternShape("Rhombus", [
+        PatternShape("Rhombus3", [
             {'y': -1.5, 'x':-1},
             {'y':0.5, 'x':-1},
             {'y':1.5, 'x':1},
             {'y':-0.5, 'x':1}
         ], 4, 0, 2),
-        PatternShape("Rhombus", [
+        PatternShape("Rhombus4", [
             {'x': -1.5, 'y':-1},
             {'x':0.5, 'y':-1},
             {'x':1.5, 'y':1},
@@ -84,45 +84,45 @@ class Patterns(GameState):
     ]
     
     AC_TRIANGLES = [
-        PatternShape("Acute Triangle", [
+        PatternShape("Acute Triangle1", [
             {'x':-0.5, 'y':-2},
             {'x':2, 'y':2},
             {'x':-1.5, 'y':1.5}
         ], 3,0,0),
-        PatternShape("Acute Triangle", [
+        PatternShape("Acute Triangle2", [
             {'y':-0.5, 'x':-2},
             {'y':2, 'x':2},
             {'y':-1.5, 'x':1.5}
         ], 3,0,0),
-        PatternShape("Acute Triangle", [
+        PatternShape("Acute Triangle3", [
             {'x':0, 'y':-3},
-            {'x':2, 'y':-2},
-            {'x':-2, 'y':-2}
+            {'x':-2, 'y':2},
+            {'x':2, 'y':-2}
         ], 3,0,0),
-        PatternShape("Acute Triangle", [
+        PatternShape("Acute Triangle4", [
             {'x':-1, 'y':-1},
             {'x':3, 'y':-2},
-            {'x':-2, 'y':-2}
+            {'x':0, 'y':2}
         ], 3,0,0)
     ]
     
     OB_TRIANGLES = [
-        PatternShape("Obtuse Triangle", [
+        PatternShape("Obtuse Triangle1", [
             {'x':0.5, 'y':-2},
             {'x':-2, 'y':2},
             {'x':0.5, 'y':0.5}
         ], 3,0,0),
-        PatternShape("Obtuse Triangle", [
+        PatternShape("Obtuse Triangle2", [
             {'x':2, 'y':1},
             {'x':4, 'y':-2},
             {'x':-3, 'y':0}
         ], 3,0,0),
-        PatternShape("Obtuse Triangle", [
+        PatternShape("Obtuse Triangle3", [
             {'x':-1, 'y':2},
             {'x':3, 'y':-3},
             {'x':-1, 'y':-1}
         ], 3,0,0),
-        PatternShape("Obtuse Triangle", [
+        PatternShape("Obtuse Triangle4", [
             {'x':0, 'y':1},
             {'x':4, 'y':-1},
             {'x':-3, 'y':-1}
@@ -130,22 +130,22 @@ class Patterns(GameState):
     ]
     
     RT_TRIANGLES = [
-        PatternShape("Right Triangle", [
+        PatternShape("Right Triangle1", [
             {'x':-2, 'y':3},
             {'x':3, 'y':-1},
             {'x':-2, 'y':-1}
         ], 3,0,0),
-        PatternShape("Right Triangle", [
+        PatternShape("Right Triangle2", [
             {'x':-3, 'y':1},
             {'x':2, 'y':1},
             {'x':2, 'y':-1}
         ], 3,0,0),
-        PatternShape("Right Triangle", [
+        PatternShape("Right Triangle3", [
             {'x':-3, 'y':1},
             {'x':2, 'y':1},
             {'x':2, 'y':-1}
         ], 3,0,0),
-        PatternShape("Right Triangle", [
+        PatternShape("Right Triangle4", [
             {'x':-2, 'y':0},
             {'x':1, 'y':3},
             {'x':0, 'y':-2}
@@ -158,12 +158,13 @@ class Patterns(GameState):
         GameState.__init__(self, main, clock, screen)
         self.font = pygame.font.SysFont("monospace", 25)
         self.make_level();
+        self.score = 0
         pass
 
     # Called to make this round's puzzle
     def make_level(self):
     
-        level = PatternLevel()
+        level = PatternLevel(self)
         level.set_question("Rawr rawr rawr rawr?")
         
         arr = Patterns.SHAPES[ randint(0,len(Patterns.SHAPES)-1) ]
@@ -175,6 +176,8 @@ class Patterns(GameState):
         arr = Patterns.SHAPES[ randint(0,len(Patterns.SHAPES)-1) ]
         level.add_shape(arr[ randint(0,len(arr)-1) ])
         level.add_shape(Patterns.SQUARE)
+        level.add_shape(Patterns.AC_TRIANGLES[2])
+        level.add_shape(Patterns.AC_TRIANGLES[3])
         
         level.add_reason("Rawr!")
         level.add_reason("Raaaawr")
@@ -189,7 +192,7 @@ class Patterns(GameState):
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pass
-        
+        self.level.update()
         self.clock.tick(30)
         pass
 

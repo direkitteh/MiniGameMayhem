@@ -9,15 +9,18 @@ from gamestate import *
 # so that it may be compared to others
 class PatternLevel:
     
-    def __init__(self):
-        self.question = "";
-        self.shapes = [];
-        self.shapeAnswer = -1;
-        self.reasons = [];
-        self.reasonAnswer = -1;
+    def __init__(self, patState):
+        self.patState = patState
+        self.question = ""
+        self.shapes = []
+        self.shapeAnswer = -1
+        self.reasons = []
+        self.reasonAnswer = -1
         
-        self.shapeSelected = -1;
-        self.reasonSelected = -1;
+        self.shapeSelected = -1
+        self.reasonSelected = -1
+        self.checkHighlighted = False
+        self.answerSubmitted = False
         pass
     
     def set_question(self, question):
@@ -27,34 +30,91 @@ class PatternLevel:
     def add_reason(self, reason):
         self.reasons.append(reason)
     
+    def update(self):
+        if(self.checkHighlighted and pygame.mouse.get_pressed()[0]):
+            self.answerSubmitted = True
+            pass
     
     def draw(self, screen):
+        if(self.answerSubmitted):
+            self.draw_level(screen)
+        else:
+            self.draw_submit(screen)
+    
+    def draw_submit(self,screen):
+        labelfont = pygame.font.SysFont(None, 36)
+        font = pygame.font.SysFont(None, 32)
+        width = screen.get_width()
+        height = screen.get_height()
+        centerY = height/3
+        color = [120,120,120]
+        mousePos = pygame.mouse.get_pos()
+        
+        # draw background
+        pygame.draw.rect(screen, [200,200,200], [width/2-300, centerY-200,600,400])
+        draw_cen_text("Correct Answer:", screen, labelfont, [0,0,0], [width/2, centerY -170])
+        
+        # draw correct shape
+        shape = self.shapes[self.shapeAnswer]
+        shape.draw_shape(screen, color , width/2, centerY-90, 30)
+        draw_cen_text(shape.name, screen, font, color, [width/2, centerY-40])
+        
+        # draw correct answer
+        draw_cen_text("Reason:", screen, labelfont, [0,0,0], [width/2, centerY - 0])
+        draw_cen_text(self.reasons[self.reasonAnswer], screen, font, color, [width/2, centerY + 40])
+        
+        # draw red or green based on submission and awarded points
+        
+        
+        # draw total score
+        
+        
+        
+        # draw next level button
+        contText = "Continue"
+        contBlit = font.render(contText, True, [0,0,0])
+        contTextDim = font.size(contText)
+        contRect = [width/2-contTextDim[0]/2-10, centerY + 100 + len(self.reasons)*(contTextDim[1]+15) + 15, contTextDim[0]+20, contTextDim[1]+20]
+        
+        contBGColor = [200,200,200]
+        if(mouse_in_rect(mousePos,contRect)):
+            contBGColor = [0,240,240]
+
+            self.contHighlighted = True
+        else:
+            self.contHighlighted = False
+        pygame.draw.rect(screen, contBGColor, contRect)
+        screen.blit(contBlit, [width/2 - contTextDim[0]/2, contRect[1]+10]) 
+        
+        pass
+    
+    def draw_level(self, screen):
         font = pygame.font.SysFont(None, 32)
         selectedFont = pygame.font.SysFont(None, 32)
         selectedFont.set_underline(True)
-        
         mousePos = pygame.mouse.get_pos()
         
-        width = screen.get_width();
-        height = screen.get_height();
+        width = screen.get_width()
+        height = screen.get_height()
+        centerY = height/4;
         
         
         # Static text
         whyText = font.render("and why?", True, [0,0,0])
-        screen.blit(whyText, [width/2 - font.size("and why?")[0]/2, height/2 + 120]);
+        screen.blit(whyText, [width/2 - font.size("and why?")[0]/2, centerY + 120]);
         
         qText = font.render(self.question, True, [0,0,0])
-        screen.blit(qText, [width/2 - font.size(self.question)[0]/2, height/2 - 100]);
+        screen.blit(qText, [width/2 - font.size(self.question)[0]/2, centerY - 100]);
         
         
         # Selected shape box
         selectedShapeBoxWidth = 250
-        pygame.draw.rect(screen, [0,0,0], [width/2-selectedShapeBoxWidth/2,height/2 + 70,selectedShapeBoxWidth,font.size("M")[1]+6], 2)
+        pygame.draw.rect(screen, [0,0,0], [width/2-selectedShapeBoxWidth/2,centerY + 70,selectedShapeBoxWidth,font.size("M")[1]+6], 2)
         
         # Shape drawing
         shapeSpacing = 120
         shapePosX = width/2 - 120.0*(len(self.shapes)-1)/2.0;
-        shapePosY = height/2;
+        shapePosY = centerY;
         
         printedName = "" # Name of shape selected to draw in box
         for i in range(len(self.shapes)):
@@ -82,12 +142,12 @@ class PatternLevel:
         # Draw name in box of selected shape
         name = font.render(printedName, True, [0,0,0])
         nameSize = font.size(printedName)
-        screen.blit(name, [width/2 - nameSize[0]/2, height/2+73])
+        screen.blit(name, [width/2 - nameSize[0]/2, centerY+73])
         
         # Reasons drawing
         for i in range(len(self.reasons)) :
             size = font.size(self.reasons[i]);
-            yPos = height/2 + 170 + i*(size[1]+15)
+            yPos = centerY + 170 + i*(size[1]+15)
             rect = [0, yPos-3, width, size[1]+6]
             
             textColor = [0,0,0]
@@ -103,18 +163,30 @@ class PatternLevel:
             pygame.draw.rect(screen, bgColor, rect) # background
             screen.blit(res, [width/2 - size[0]/2, yPos])
         
-        pygame.draw.line(screen, (0,0,0), (width/2,0), (width/2,height)) 
-        pygame.draw.line(screen, (0,0,0), (0,height/2), (width,height/2))
-        pass
+        pygame.draw.line(screen, (0,0,0), (width/2,0), (width/2,height)) # centering lines
+        pygame.draw.line(screen, (0,0,0), (0,centerY), (width,centerY))
+
+        # submit button
+        checkText = "Check Answer"
+        checkBlit = font.render(checkText, True, [0,0,0])
+        checkTextDim = font.size(checkText)
+        checkRect = [width/2-checkTextDim[0]/2-10, centerY + 170 + len(self.reasons)*(checkTextDim[1]+15) + 15, checkTextDim[0]+20, checkTextDim[1]+20]
         
-        # Check button
-        checkButtonText = "Check Answer!"
-        checkButton =font.render(checkButtonText, True, [0,0,0])
-        checkButtonSize = font.size(checkButtonText)
-        checkRect = [width/2 - checkButtonSize[0]/2 - 10, height/2 + 170 + len(self.reasons)*(15+checkButtonSize[1]), checkButtonSize[0]+20,checkButtonSize[1]+20]
-        checkButtonColor = [220,220,220]
-        pygame.draw.rect(screen, checkButtonColor, checkRect)
-        screen.blit(checkButton, [checkRect[0]+10, checkRect[1]+10])
+        checkBGColor = [200,200,200]
+        if(mouse_in_rect(mousePos,checkRect)):
+            checkBGColor = [0,240,240]
+            self.checkHighlighted = True
+        else:
+            self.checkHighlighted = False
+        pygame.draw.rect(screen, checkBGColor, checkRect)
+        screen.blit(checkBlit, [width/2 - checkTextDim[0]/2, checkRect[1]+10]) 
+
+        pass
+    
+def draw_cen_text(text, screen, font, color, pos):
+    dim = font.size(text)
+    ren = font.render(text, True, color)
+    screen.blit(ren, [pos[0] - dim[0]/2, pos[1] - dim[1]/2])
 
 def mouse_in_rect(mousePos, rect):
     return (mousePos[0] >= rect[0] and mousePos[1] >= rect[1] and mousePos[0] < (rect[0]+rect[2]) and mousePos[1] < (rect[1]+rect[3]))
