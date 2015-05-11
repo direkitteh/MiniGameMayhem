@@ -32,25 +32,25 @@ class Patterns(GameState):
     ], 6,0,3)
     
     RECTANGLES = [ # mutations of a rectangle
-        PatternShape("Rectangle1", [
+        PatternShape("Rectangle", [
             {'x':-2,'y':-0.5},
             {'x':2, 'y':-0.5},
             {'x':2, 'y':0.5},
             {'x':-2,'y':0.5}
         ], 4, 4, 2),
-        PatternShape("Rectangle2", [
+        PatternShape("Rectangle", [
             {'x':-1.5,'y':-1},
             {'x':1.5, 'y':-1},
             {'x':1.5, 'y':1},
             {'x':-1.5,'y':1}
         ], 4, 4, 2),
-        PatternShape("Rectangle3", [
+        PatternShape("Rectangle", [
             {'x':-1,'y':-1.5},
             {'x':1, 'y':-1.5},
             {'x':1, 'y':1.5},
             {'x':-1,'y':1.5}
         ], 4, 4, 2),
-        PatternShape("Rectangle4", [
+        PatternShape("Rectangle", [
             {'x':-2,'y':-0.5},
             {'x':2, 'y':-0.5},
             {'x':2, 'y':0.5},
@@ -58,25 +58,25 @@ class Patterns(GameState):
         ], 4, 4, 2),
     ]
     RHOMBUSES = [
-        PatternShape("Rhombus1", [
+        PatternShape("Rhombus", [
             {'x': 2, 'y':-1},
             {'x':-0.25, 'y':-1},
             {'x':-2, 'y':1},
             {'x':0.25, 'y':1}
         ], 4, 0, 2),
-        PatternShape("Rhombus2", [
+        PatternShape("Rhombus", [
             {'y': 2, 'x':-1},
             {'y':-0.25, 'x':-1},
             {'y':-2, 'x':1},
             {'y':0.25, 'x':1}
         ], 4, 0, 2),
-        PatternShape("Rhombus3", [
+        PatternShape("Rhombus", [
             {'y': -1.5, 'x':-1},
             {'y':0.5, 'x':-1},
             {'y':1.5, 'x':1},
             {'y':-0.5, 'x':1}
         ], 4, 0, 2),
-        PatternShape("Rhombus4", [
+        PatternShape("Rhombus", [
             {'x': -1.5, 'y':-1},
             {'x':0.5, 'y':-1},
             {'x':1.5, 'y':1},
@@ -85,22 +85,22 @@ class Patterns(GameState):
     ]
     
     AC_TRIANGLES = [
-        PatternShape("Acute Triangle1", [
+        PatternShape("Acute Triangle", [
             {'x':-0.5, 'y':-2},
             {'x':2, 'y':2},
             {'x':-1.5, 'y':1.5}
         ], 3,0,0),
-        PatternShape("Acute Triangle2", [
+        PatternShape("Acute Triangle", [
             {'y':-0.5, 'x':-2},
             {'y':2, 'x':2},
             {'y':-1.5, 'x':1.5}
         ], 3,0,0),
-        PatternShape("Acute Triangle3", [
+        PatternShape("Acute Triangle", [
             {'x':0, 'y':-3},
             {'x':-2, 'y':2},
             {'x':2, 'y':-2}
         ], 3,0,0),
-        PatternShape("Acute Triangle4", [
+        PatternShape("Acute Triangle", [
             {'x':-1, 'y':-1},
             {'x':3, 'y':-2},
             {'x':0, 'y':2}
@@ -108,22 +108,22 @@ class Patterns(GameState):
     ]
     
     OB_TRIANGLES = [
-        PatternShape("Obtuse Triangle1", [
+        PatternShape("Obtuse Triangle", [
             {'x':0.5, 'y':-2},
             {'x':-2, 'y':2},
             {'x':0.5, 'y':0.5}
         ], 3,0,0),
-        PatternShape("Obtuse Triangle2", [
+        PatternShape("Obtuse Triangle", [
             {'x':2, 'y':1},
             {'x':4, 'y':-2},
             {'x':-3, 'y':0}
         ], 3,0,0),
-        PatternShape("Obtuse Triangle3", [
+        PatternShape("Obtuse Triangle", [
             {'x':-1, 'y':2},
             {'x':3, 'y':-3},
             {'x':-1, 'y':-1}
         ], 3,0,0),
-        PatternShape("Obtuse Triangle4", [
+        PatternShape("Obtuse Triangle", [
             {'x':0, 'y':1},
             {'x':4, 'y':-1},
             {'x':-3, 'y':-1}
@@ -131,22 +131,22 @@ class Patterns(GameState):
     ]
     
     RT_TRIANGLES = [
-        PatternShape("Right Triangle1", [
+        PatternShape("Right Triangle", [
             {'x':-2, 'y':3},
             {'x':3, 'y':-1},
             {'x':-2, 'y':-1}
         ], 3,0,0),
-        PatternShape("Right Triangle2", [
+        PatternShape("Right Triangle", [
             {'x':-3, 'y':1},
             {'x':2, 'y':1},
             {'x':2, 'y':-1}
         ], 3,0,0),
-        PatternShape("Right Triangle3", [
+        PatternShape("Right Triangle", [
             {'x':-3, 'y':1},
             {'x':2, 'y':1},
             {'x':2, 'y':-1}
         ], 3,0,0),
-        PatternShape("Right Triangle4", [
+        PatternShape("Right Triangle", [
             {'x':-2, 'y':0},
             {'x':1, 'y':3},
             {'x':0, 'y':-2}
@@ -154,7 +154,9 @@ class Patterns(GameState):
     ]
     
     SHAPES = [RECTANGLES, RHOMBUSES, AC_TRIANGLES, OB_TRIANGLES, RT_TRIANGLES, [SQUARE, EQ_TRIANGLE, HEXAGON]]
-        
+    
+    LEVELS = []
+    
     def __init__(self, clock, screen):
         GameState.__init__(self, clock, screen)
         self.font = pygame.font.SysFont("monospace", 25)
@@ -181,7 +183,62 @@ class Patterns(GameState):
                     
             pygame.display.flip()
             self.clock.tick(60)
-            
+    
+    
+    def build_levels(self):
+        if(len(Patterns.LEVELS) != 0): pass # Already populated
+        
+        ########  not right vs right  #########
+        level = PatternLevel(self)
+        level.set_question("Which shape doesn't belong?")
+        
+        
+        level.add_shape(Patterns.RT_TRIANGLES[ randint(0,len(Patterns.RT_TRIANGLES)-1) ])
+        level.add_shape(Patterns.RT_TRIANGLES[ randint(0,len(Patterns.RT_TRIANGLES)-1) ])
+        
+        non_rt_tris = [ [Patterns.EQ_TRIANGLE], AC_TRIANGLES, OB_TRIANGLES ]
+        arr = non_rt_tris[ randint(0,len(non_rt_tris)-1) ]
+        level.add_shape(arr[ randint(0,len(arr)-1) ])
+        
+        level.add_shape(Patterns.RT_TRIANGLES[ randint(0,len(Patterns.RT_TRIANGLES)-1) ])
+        
+        
+        level.shapeAnswer = 2
+        
+        level.add_reason("It is an obtuse triangle")
+        level.add_reason("It is a right triangle")
+        level.add_reason("It is an acute triangle")
+        level.add_reason("It is an equilateral triangle")
+        
+        level.reasonAnswer = 1
+        
+        Patterns.LEVELS.append(level)
+        
+        
+        ########  2 right vs square vs pentagon  #########
+        level = PatternLevel(self)
+        level.set_question("Which shape doesn't belong?")
+        
+        level.add_shape(Patterns.HEXAGON)
+        level.add_shape(Patterns.RT_TRIANGLES[ randint(0,len(Patterns.RT_TRIANGLES)-1) ])
+        level.add_shape(Patterns.RT_TRIANGLES[ randint(0,len(Patterns.RT_TRIANGLES)-1) ])
+        level.add_shape(Patterns.SQUARE)
+        
+        level.shapeAnswer = 0
+        
+        level.add_reason("It has too many sides")
+        level.add_reason("It is a right triangle")
+        level.add_reason("It has no acute angles")
+        level.add_reason("It has no right angles")
+        
+        level.reasonAnswer = 3
+        
+        Patterns.LEVELS.append(level)
+        
+        
+        
+        pass
+    
     # Called to make this round's puzzle
     def make_level(self):
     
