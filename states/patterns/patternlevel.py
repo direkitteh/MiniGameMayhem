@@ -21,6 +21,7 @@ class PatternLevel:
         self.reasonSelected = -1
         self.checkHighlighted = False
         self.answerSubmitted = False
+        self.addScore = 0
         pass
     
     def set_question(self, question):
@@ -31,12 +32,14 @@ class PatternLevel:
         self.reasons.append(reason)
     
     def update(self):
-        if(self.checkHighlighted and pygame.mouse.get_pressed()[0]):
+        if(self.checkHighlighted and pygame.mouse.get_pressed()[0] and not self.answerSubmitted):
             self.answerSubmitted = True
+            if(self.reasonSelected == self.reasonAnswer): self.addScore += 50
+            if(self.shapeSelected == self.shapeAnswer): self.addScore += 50
             pass
     
     def draw(self, screen):
-        if(self.answerSubmitted):
+        if(not self.answerSubmitted):
             self.draw_level(screen)
         else:
             self.draw_submit(screen)
@@ -51,7 +54,7 @@ class PatternLevel:
         mousePos = pygame.mouse.get_pos()
         
         # draw background
-        pygame.draw.rect(screen, [200,200,200], [width/2-300, centerY-200,600,400])
+        pygame.draw.rect(screen, [200,200,200], [width/2-300, centerY-200,600,350])
         draw_cen_text("Correct Answer:", screen, labelfont, [0,0,0], [width/2, centerY -170])
         
         # draw correct shape
@@ -67,14 +70,13 @@ class PatternLevel:
         
         
         # draw total score
-        
-        
+        draw_cen_text("Score: " + str(self.addScore), screen, labelfont, [128,128,0], [width/2, centerY + 100])
         
         # draw next level button
         contText = "Continue"
         contBlit = font.render(contText, True, [0,0,0])
         contTextDim = font.size(contText)
-        contRect = [width/2-contTextDim[0]/2-10, centerY + 100 + len(self.reasons)*(contTextDim[1]+15) + 15, contTextDim[0]+20, contTextDim[1]+20]
+        contRect = [width/2-contTextDim[0]/2-10, centerY + 50 + len(self.reasons)*(contTextDim[1]+15) + 15, contTextDim[0]+20, contTextDim[1]+20]
         
         contBGColor = [200,200,200]
         if(mouse_in_rect(mousePos,contRect)):

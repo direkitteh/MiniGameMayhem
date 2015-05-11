@@ -183,6 +183,8 @@ class Patterns(GameState):
         level.add_reason("Raaaawr")
         level.add_reason("Rawr?")
         level.add_reason("Rawr.")
+        level.shapeAnswer = 1
+        level.reasonAnswer = 1
         self.level = level
         #self.testPoint = generate_shape(3,0,0)
         pass
