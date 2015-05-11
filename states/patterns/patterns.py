@@ -190,7 +190,7 @@ class Patterns(GameState):
         
         ########  not right vs right  #########
         level = PatternLevel(self)
-        level.set_question("Which shape doesn't belong?")
+        level.set_question("Which shape doesn't match?")
         
         
         level.add_shape(Patterns.RT_TRIANGLES[ randint(0,len(Patterns.RT_TRIANGLES)-1) ])
@@ -217,7 +217,7 @@ class Patterns(GameState):
         
         ########  2 right vs square vs pentagon  #########
         level = PatternLevel(self)
-        level.set_question("Which shape doesn't belong?")
+        level.set_question("Which shape doesn't match?")
         
         level.add_shape(Patterns.HEXAGON)
         level.add_shape(Patterns.RT_TRIANGLES[ randint(0,len(Patterns.RT_TRIANGLES)-1) ])
