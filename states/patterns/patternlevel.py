@@ -32,7 +32,7 @@ class PatternLevel:
         self.reasons.append(reason)
     
     def update(self):
-        if(self.checkHighlighted and pygame.mouse.get_pressed()[0] and not self.answerSubmitted):
+        if(self.shapeSelected != -1 and self.reasonSelected != -1 and self.checkHighlighted and pygame.mouse.get_pressed()[0] and not self.answerSubmitted):
             self.answerSubmitted = True
             if(self.reasonSelected == self.reasonAnswer): self.addScore += 50
             if(self.shapeSelected == self.shapeAnswer): self.addScore += 50
@@ -170,16 +170,20 @@ class PatternLevel:
 
         # submit button
         checkText = "Check Answer"
-        checkBlit = font.render(checkText, True, [0,0,0])
         checkTextDim = font.size(checkText)
         checkRect = [width/2-checkTextDim[0]/2-10, centerY + 170 + len(self.reasons)*(checkTextDim[1]+15) + 15, checkTextDim[0]+20, checkTextDim[1]+20]
         
         checkBGColor = [200,200,200]
-        if(mouse_in_rect(mousePos,checkRect)):
+        checkTextColor = [0,0,0]
+        if(self.shapeSelected == -1 or self.reasonSelected == -1):
+            checkBGColor = [80,80,80]
+            checkTextColor = [200,200,200]
+        elif(mouse_in_rect(mousePos,checkRect)):
             checkBGColor = [0,240,240]
             self.checkHighlighted = True
         else:
             self.checkHighlighted = False
+        checkBlit = font.render(checkText, True, checkTextColor)
         pygame.draw.rect(screen, checkBGColor, checkRect)
         screen.blit(checkBlit, [width/2 - checkTextDim[0]/2, checkRect[1]+10]) 
 
