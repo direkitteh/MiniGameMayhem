@@ -17,10 +17,11 @@ class PatternShape:
         self.parallels = parallels;
         
         # Normalizing points
-        for point in self.points:
-            mag = math.sqrt(point['x']*point['x'] + point['y']*point['y'])
-            point['x'] /= mag
-            point['y'] /= mag
+        if "Rhombus" not in name: #I'm angry and tired
+          for point in self.points:
+              mag = math.sqrt(point['x']*point['x'] + point['y']*point['y'])
+              point['x'] /= mag
+              point['y'] /= mag
         
         pass
         

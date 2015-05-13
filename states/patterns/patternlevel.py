@@ -17,12 +17,17 @@ class PatternLevel:
         self.reasons = []
         self.reasonAnswer = -1
         
+        self.reset()
+        pass
+    
+    def reset(self):
+        self.done = False
+        self.addScore = 0
+        self.checkHighlighted = False
+        self.contHighlighted = False
+        self.answerSubmitted = False
         self.shapeSelected = -1
         self.reasonSelected = -1
-        self.checkHighlighted = False
-        self.answerSubmitted = False
-        self.addScore = 0
-        pass
     
     def set_question(self, question):
         self.question = question
@@ -36,7 +41,8 @@ class PatternLevel:
             self.answerSubmitted = True
             if(self.reasonSelected == self.reasonAnswer): self.addScore += 50
             if(self.shapeSelected == self.shapeAnswer): self.addScore += 50
-            pass
+        if(self.contHighlighted and pygame.mouse.get_pressed()[0]):
+          self.done = True
     
     def draw(self, screen):
         if(not self.answerSubmitted):
@@ -69,8 +75,10 @@ class PatternLevel:
         # draw red or green based on submission and awarded points
         
         
+        # draw added score
+        draw_cen_text("+" + str(self.addScore), screen, labelfont, [128,128,0], [width/2, centerY + 100])
         # draw total score
-        draw_cen_text("Score: " + str(self.addScore), screen, labelfont, [128,128,0], [width/2, centerY + 100])
+        draw_cen_text("Total: " + str(self.addScore + self.patState.score), screen, labelfont, [128,128,0], [width/2, centerY + 120])
         
         # draw next level button
         contText = "Continue"
@@ -81,7 +89,6 @@ class PatternLevel:
         contBGColor = [200,200,200]
         if(mouse_in_rect(mousePos,contRect)):
             contBGColor = [0,240,240]
-
             self.contHighlighted = True
         else:
             self.contHighlighted = False

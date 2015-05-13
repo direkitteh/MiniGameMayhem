@@ -59,28 +59,28 @@ class Patterns(GameState):
     ]
     RHOMBUSES = [
         PatternShape("Rhombus", [
-            {'x': 2, 'y':-1},
-            {'x':-0.25, 'y':-1},
-            {'x':-2, 'y':1},
-            {'x':0.25, 'y':1}
+            {'x': 0.5, 'y':-1},
+            {'x': 1, 'y':1},
+            {'x':-0.5, 'y':1},
+            {'x':-1, 'y':-1}
         ], 4, 0, 2),
         PatternShape("Rhombus", [
-            {'y': 2, 'x':-1},
-            {'y':-0.25, 'x':-1},
-            {'y':-2, 'x':1},
-            {'y':0.25, 'x':1}
+            {'x':-0.5, 'y':-1},
+            {'x':-1, 'y':1},
+            {'x': 0.5, 'y':1},
+            {'x': 1, 'y':-1}
         ], 4, 0, 2),
         PatternShape("Rhombus", [
-            {'y': -1.5, 'x':-1},
-            {'y':0.5, 'x':-1},
-            {'y':1.5, 'x':1},
-            {'y':-0.5, 'x':1}
+            {'x':-1, 'y':-0.5},
+            {'x': 1, 'y':-1},
+            {'x': 1, 'y': 0.5},
+            {'x':-1, 'y': 1}
         ], 4, 0, 2),
         PatternShape("Rhombus", [
-            {'x': -1.5, 'y':-1},
-            {'x':0.5, 'y':-1},
-            {'x':1.5, 'y':1},
-            {'x':-0.5, 'y':1}
+            {'x':-1, 'y': 0.5},
+            {'x': 1, 'y': 1},
+            {'x': 1, 'y':-0.5},
+            {'x':-1, 'y':-1}
         ], 4, 0, 2)
     ]
     
@@ -160,8 +160,10 @@ class Patterns(GameState):
     def __init__(self, clock, screen):
         GameState.__init__(self, clock, screen)
         self.font = pygame.font.SysFont("monospace", 25)
-        self.make_level();
         self.score = 0
+        self.currentLevel = 0;
+        self.build_levels();
+        self.level = Patterns.LEVELS[self.currentLevel];
         pass
 
 
@@ -196,7 +198,7 @@ class Patterns(GameState):
         level.add_shape(Patterns.RT_TRIANGLES[ randint(0,len(Patterns.RT_TRIANGLES)-1) ])
         level.add_shape(Patterns.RT_TRIANGLES[ randint(0,len(Patterns.RT_TRIANGLES)-1) ])
         
-        non_rt_tris = [ [Patterns.EQ_TRIANGLE], AC_TRIANGLES, OB_TRIANGLES ]
+        non_rt_tris = [ [Patterns.EQ_TRIANGLE], Patterns.AC_TRIANGLES, Patterns.OB_TRIANGLES ]
         arr = non_rt_tris[ randint(0,len(non_rt_tris)-1) ]
         level.add_shape(arr[ randint(0,len(arr)-1) ])
         
@@ -206,9 +208,9 @@ class Patterns(GameState):
         level.shapeAnswer = 2
         
         level.add_reason("It is an obtuse triangle")
-        level.add_reason("It is a right triangle")
+        level.add_reason("It is not a right triangle")
         level.add_reason("It is an acute triangle")
-        level.add_reason("It is an equilateral triangle")
+        level.add_reason("It is not an equilateral triangle")
         
         level.reasonAnswer = 1
         
@@ -236,44 +238,64 @@ class Patterns(GameState):
         Patterns.LEVELS.append(level)
         
         
-        
-        pass
-    
-    # Called to make this round's puzzle
-    def make_level(self):
-    
+        ########  Square, 2 Rectangles, vs Rhombus (no right angles) #########
         level = PatternLevel(self)
-        level.set_question("Rawr rawr rawr rawr?")
+        level.set_question("Which shape doesn't match?")
         
-        arr = Patterns.SHAPES[ randint(0,len(Patterns.SHAPES)-1) ]
-        level.add_shape(arr[ randint(0,len(arr)-1) ])
-        arr = Patterns.SHAPES[ randint(0,len(Patterns.SHAPES)-1) ]
-        level.add_shape(arr[ randint(0,len(arr)-1) ])
-        arr = Patterns.SHAPES[ randint(0,len(Patterns.SHAPES)-1) ]
-        level.add_shape(arr[ randint(0,len(arr)-1) ])
-        arr = Patterns.SHAPES[ randint(0,len(Patterns.SHAPES)-1) ]
+        level.add_shape(Patterns.RECTANGLES[ randint(0,len(Patterns.RECTANGLES)-1) ])
+        level.add_shape(Patterns.SQUARE)
+        level.add_shape(Patterns.RHOMBUSES[ randint(0,len(Patterns.RHOMBUSES)-1) ])
+        level.add_shape(Patterns.RECTANGLES[ randint(0,len(Patterns.RECTANGLES)-1) ])
+        
+        level.shapeAnswer = 2
+        
+        level.add_reason("It isn't equilateral")
+        level.add_reason("It has no parallel sides")
+        level.add_reason("It has no right angles")
+        level.add_reason("It has no acute angles")
+        
+        level.reasonAnswer = 2
+        
+        Patterns.LEVELS.append(level)
+        
+        
+        ########  Rhombus, Rectangles, Hexagon, vs Triangle (no paralels) #########
+        level = PatternLevel(self)
+        level.set_question("Which shape doesn't match?")
+        
+        level.add_shape(Patterns.HEXAGON)
+        arr = non_rt_tris[ randint(0,len(non_rt_tris)-1) ]
         level.add_shape(arr[ randint(0,len(arr)-1) ])
         level.add_shape(Patterns.SQUARE)
-        level.add_shape(Patterns.AC_TRIANGLES[2])
-        level.add_shape(Patterns.AC_TRIANGLES[3])
+        level.add_shape(Patterns.RHOMBUSES[ randint(0,len(Patterns.RHOMBUSES)-1) ])
         
-        level.add_reason("Rawr!")
-        level.add_reason("Raaaawr")
-        level.add_reason("Rawr?")
-        level.add_reason("Rawr.")
         level.shapeAnswer = 1
+        
+        level.add_reason("It has no right angles")
+        level.add_reason("It has no parallel sides")
+        level.add_reason("It isn't equilateral")
+        level.add_reason("It has no acute angles")
+        
         level.reasonAnswer = 1
-        self.level = level
-        #self.testPoint = generate_shape(3,0,0)
+        
+        Patterns.LEVELS.append(level)
+        
         pass
     
     # Update movement, track events
     def update(self, events):
-        for event in events:
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                pass
         self.level.update()
         self.clock.tick(30)
+        
+        if(self.level.done):
+          self.currentLevel += 1
+          if(self.currentLevel >= len(Patterns.LEVELS)):
+            self.running = False
+            return;
+          
+          self.score += self.level.addScore;
+          self.level.reset()
+          self.level = Patterns.LEVELS[self.currentLevel]
         pass
 
     # Draw this state
