@@ -226,7 +226,7 @@ class SequenceProblem:
         return self.equation
 
     def is_correct(self, answer):
-        print "DOOOOP " + answer + " " + str(eval(answer)) + " " + str(eval(self.solution))
+        if(answer == "") : return False
         return eval(answer) == eval(self.solution) # eval because "1" doesnt equal "01" otherwise
 
     def get_solution_length(self):
