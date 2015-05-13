@@ -145,7 +145,7 @@ class SequenceGame:
         font = pygame.font.SysFont(None, 32)
         answer_text = font.render("Answer: ", True, Colors.DARK_GREEN)
         text_position = ((self.screen.get_width() // 2) - (answer_text.get_width() + self.answer_input.get_width()) // 2,
-                         self.screen.get_height() - (answer_text.get_height() * 2))
+                         self.screen.get_height()/2 - (answer_text.get_height() * 2))
         input_position = (text_position[0] + answer_text.get_width(), text_position[1])
         self.answer_input.set_pos(input_position[0], input_position[1])
         self.screen.blit(answer_text, text_position)
@@ -226,7 +226,8 @@ class SequenceProblem:
         return self.equation
 
     def is_correct(self, answer):
-        return answer == self.solution
+        print "DOOOOP " + answer + " " + str(eval(answer)) + " " + str(eval(self.solution))
+        return eval(answer) == eval(self.solution) # eval because "1" doesnt equal "01" otherwise
 
     def get_solution_length(self):
         return len(self.solution)
@@ -250,18 +251,18 @@ class TextInput:
             if event.type == KEYDOWN:
                 if event.key == K_BACKSPACE:
                     self.value = self.value[:-1]
-                if event.key == K_0: self.value += "0"
-                elif event.key == K_1 or event.key == K_KP0: self.value += "1"
-                elif event.key == K_2 or event.key == K_KP1: self.value += "2"
-                elif event.key == K_3 or event.key == K_KP2: self.value += "3"
+                if event.key == K_0 or event.key == K_KP0: self.value += "0"
+                elif event.key == K_1 or event.key == K_KP1: self.value += "1"
+                elif event.key == K_2 or event.key == K_KP2: self.value += "2"
+                elif event.key == K_3 or event.key == K_KP3: self.value += "3"
                 elif event.key == K_4 or event.key == K_KP4: self.value += "4"
                 elif event.key == K_5 or event.key == K_KP5: self.value += "5"
                 elif event.key == K_6 or event.key == K_KP6: self.value += "6"
                 elif event.key == K_7 or event.key == K_KP7: self.value += "7"
                 elif event.key == K_8 or event.key == K_KP8: self.value += "8"
                 elif event.key == K_9 or event.key == K_KP9: self.value += "9"
-        if len(self.value) > self.max_length and self.max_length >= 0:
-            self.value = self.value[:-1]
+        """if len(self.value) > self.max_length and self.max_length >= 0:
+            self.value = self.value[:-1]""" # Why limit the max answer? Especially when the limit is 2 and the generator makes 3+ digit answers occasionally
 
     def get_height(self):
         return self.height
