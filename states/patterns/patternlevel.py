@@ -107,6 +107,9 @@ class PatternLevel:
         height = screen.get_height()
         centerY = height/4;
         
+        pygame.draw.line(screen, (0,0,0), (width/2,0), (width/2,height)) # centering lines
+        pygame.draw.line(screen, (0,0,0), (0,centerY), (width,centerY))
+        
         
         # Static text
         whyText = font.render("and why?", True, [0,0,0])
@@ -171,9 +174,6 @@ class PatternLevel:
             res = font.render(self.reasons[i], True, textColor)
             pygame.draw.rect(screen, bgColor, rect) # background
             screen.blit(res, [width/2 - size[0]/2, yPos])
-        
-        pygame.draw.line(screen, (0,0,0), (width/2,0), (width/2,height)) # centering lines
-        pygame.draw.line(screen, (0,0,0), (0,centerY), (width,centerY))
 
         # submit button
         checkText = "Check Answer"
