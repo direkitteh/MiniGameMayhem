@@ -1,8 +1,8 @@
 import pygame
 
 from gamestate import *
+from .patterns.patterns import Patterns
 from states.sequences import SequenceGame
-
 
 class MainMenu(GameState):
     def __init__(self, clock, screen):
@@ -39,6 +39,8 @@ class MainMenu(GameState):
                     pass
                 elif event.key == pygame.K_3:
                     # Switch state to patterns game
+                    game = Patterns(self.clock, self.screen)
+                    game.start()
                     pass
                 elif event.key == pygame.K_4:
                     # Switch state to angles game
