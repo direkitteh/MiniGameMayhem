@@ -32,7 +32,7 @@ class MiniGameMayhem:
     #TODO: delete the line below this, the uber long one
     #howToPlayButton = pygame.transform.scale(howToPlayButtonOrig, (int(round(howToPlayButtonOrig.get_width()*howToPlayButtonScalerOrig)), int(round(howToPlayButtonOrig.get_height()*howToPlayButtonScalerOrig))))
     selectedObjectId = 0
-    #selected button increasingOrNot
+    #if the selected buttonIncreasing Or Not
     buttonIncreasingOrNot = True
     #difficulty screen
     difficultyButtons = ["easy", "medium", "hard", "back"]
@@ -63,6 +63,10 @@ class MiniGameMayhem:
     debugErrorOnePrinted = False
     startPrintY = 160 #TEMPORARY TO PRINT FRACTIONS AS TEXT IN GAME
     fractionsToDraw = []
+
+    theScreen = None
+
+    debugPrintLoc = 100
 
     startButton = pygame.transform.scale(startButtonOrig,\
         (int(round(startButtonOrig.get_width() * startButtonScaler)), \
@@ -100,6 +104,7 @@ class MiniGameMayhem:
         self.running = True
 
         screen = pygame.display.get_surface()
+        self.theScreen = screen
 
         while self.running:
             # Pump GTK messages.
@@ -146,6 +151,8 @@ class MiniGameMayhem:
 
             #self.currentScreen = "title" #for now
 
+            #print("THESCREEN IS!!!!!!!!    " + str(type(self.theScreen)))
+
             #title screen
             if(self.currentScreen == "title"):
                 #title background
@@ -172,6 +179,7 @@ class MiniGameMayhem:
                     )\
                 )
             elif(self.currentScreen == "difficulty"):
+                self.animateObject()
                 screen.blit(self.easyButton,\
                     (int(round(screen.get_width()/2 - self.easyButton.get_width()/2)),\
                         int(round(screen.get_height()/5 - self.easyButton.get_height()/2))
@@ -193,6 +201,7 @@ class MiniGameMayhem:
                     )\
                 )
             elif(self.currentScreen == "howToPlay"):
+                self.animateObject()
                 screen.blit(self.backButton,\
                     (int(round(screen.get_width()/2 - self.backButton.get_width()/2)),\
                         int(round(screen.get_height()/1.2 - self.backButton.get_height()/2))
@@ -237,9 +246,10 @@ class MiniGameMayhem:
 
             #debug tools
             debugOrNot = True
-            tryCatchOrNot = False
+            tryCatchOrNot = True
+            self.debugPrintLoc = 100
             if debugOrNot:
-                self.doTheDebugThing(screen, tryCatchOrNot)
+                self.doTheDebugThing(tryCatchOrNot)
 
             # Flip Display (Update the full display Surface to the screen)
             pygame.display.flip()
@@ -247,29 +257,46 @@ class MiniGameMayhem:
             # Try to stay at 30 FPS
             self.clock.tick(30)
 
-    def doTheDebugThing(e, screen, tryCatchOrNot):
+    def doTheDebugThing(e, tryCatchOrNot):
         if (tryCatchOrNot):
             try:
-                e.actuallyDoTheDebugThing(screen)
+                e.actuallyDoTheDebugThing()
             except:
                 if(not e.debugErrorOnePrinted):
                     print("ERROR LOLOLOL GIT GUD")
                 e.debugErrorOnePrinted = True
         else:
-            e.actuallyDoTheDebugThing(screen)
+            e.actuallyDoTheDebugThing()
 
-    def actuallyDoTheDebugThing(e, screen):
-        myfont = pygame.font.SysFont("monospace", 15)
-        lab = myfont.render("selectedObjectId: " + str(e.selectedObjectId), 1, (255,255,0))
-        screen.blit(lab, (100,100))
-        lab2 = myfont.render("currentScreen: " + e.currentScreen, 1, (255,255,0))
-        screen.blit(lab2, (100,80))
-        lab3 = myfont.render("the selected button: " + \
-            e.getCurrentButtons()[e.selectedObjectId], 1, (255,255,0))
-        screen.blit(lab3, (100,120))
+    def actuallyDoTheDebugThing(e):
+        #print("actuallydoingthedebug thing woooot")
+        e.debugPrint("selectedObjectId" ,e.selectedObjectId)
+        e.debugPrint("currentScreen" , e.currentScreen)
+        e.debugPrint("the selected button" ,e.getCurrentButtons()[e.selectedObjectId])
+        e.debugPrint("buttonIncreasingOrNot",e.buttonIncreasingOrNot)
+        e.debugPrint("easyButtonScaler",e.easyButtonScaler)
+#        myfont = pygame.font.SysFont("monospace", 15)
+#        lab = myfont.render("selectedObjectId: " + str(e.selectedObjectId), 1, (255,255,0))
+#        screen.blit(lab, (100,100))
+#        lab2 = myfont.render("currentScreen: " + e.currentScreen, 1, (255,255,0))
+#        screen.blit(lab2, (100,80))
+#        lab3 = myfont.render("the selected button: " + \
+#            e.getCurrentButtons()[e.selectedObjectId], 1, (255,255,0))
+#        screen.blit(lab3, (100,120))
+#        lab5 = myfont.render("buttonIncreasingOrNot: " + \
+#            str(e.buttonIncreasingOrNot), 1, (255,255,0))
+#        screen.blit(lab5, (100,160))
 #        lab4 = myfont.render("easyButtonScaler: " + \
-#            str(e.easyButtonScaler), 1 (255,255,0))
-#        screen.blit(lab4, (100,140))
+#            str(e.easyButtonScaler), 1, (255,255,0))
+#        screen.blit(lab4, 1, (100,140))
+
+    def debugPrint(e, strTitle, valueToPrint):
+        #print("DEBUG PIRITNG!!! W5555555555555555t")
+        myfont = pygame.font.SysFont("monospace", 15)
+        ahaha = myfont.render("" + strTitle + ": " + str(valueToPrint), 1, (255,255,0))
+        #print("###### thescreen" + str(type(e.theScreen)))
+        e.theScreen.blit(ahaha, (100, e.debugPrintLoc))
+        e.debugPrintLoc += 20
 
     #returns a Fraction object that is created based on the level.
     def makeFraction(e, level):
@@ -328,17 +355,28 @@ class MiniGameMayhem:
         #titleButtons
         #currentScreen
         #if e.currentScreen == "title":
-        if(e.getCurrentButtons()[e.selectedObjectId] == "startButton"): #if selected is startButton
+        #print("hereA")
+        theCurrentButtons = e.getCurrentButtons()
+        #print("WHATTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT")
+        #print("printingTHEOIAUSERIVUAWEIORJACWOIEJRCURRENTBUTTONS!!")
+        #print(theCurrentButtons)
+        if(theCurrentButtons[e.selectedObjectId] == "startButton"): #if selected is startButton
+            #print("hereB")
             e.animateStartButton()
-        elif(e.getCurrentButtons()[e.selectedObjectId] == "howToPlay"): #if selected is How To Play
+        elif(theCurrentButtons[e.selectedObjectId] == "howToPlay"): #if selected is How To Play
+            #print("hereC")
             e.animateHowToPlayButton()
-        elif(e.getCurrentButtons([e.selectedObjectId] == "easy")):
+        elif(theCurrentButtons[e.selectedObjectId] == "easy"):
+            #print("woohooD")
             e.animateEasyButton()
-        elif(e.getCurrentButtons([e.selectedObjectId] == "medium")):
+        elif(theCurrentButtons[e.selectedObjectId] == "medium"):
+            #print("hereE")
             e.animateMediumButton()
-        elif(e.getCurrentButtons([e.selectedObjectId] == "hard")):
+        elif(theCurrentButtons[e.selectedObjectId] == "hard"):
+            #print("hereF")
             e.animateHardButton()
-        elif(e.getCurrentButtons([e.selectedObjectId] == "back")):
+        elif(theCurrentButtons[e.selectedObjectId] == "back"):
+            #print("hereG")
             e.animateBackButton()
 
     def animateStartButton(e):
@@ -364,13 +402,18 @@ class MiniGameMayhem:
         e.scaleHowToPlayButtonNow()
 
     def animateEasyButton(e):
+        #print("here1")
         if(e.easyButtonScaler >= .85):
+            #print("here2")
             e.buttonIncreasingOrNot = False
         elif(e.easyButtonScaler <= .65):
+            #print("here3")
             e.buttonIncreasingOrNot = True
-        if(e.buttonIncreasingOrNot):
+        if(e.buttonIncreasingOrNot == True):
+            #print("here4")
             e.easyButtonScaler += .005
-        else:
+        elif(e.buttonIncreasingOrNot == False):
+            #print("here5")
             e.easyButtonScaler -= .005
         e.scaleEasyButtonNow()
 
@@ -382,7 +425,7 @@ class MiniGameMayhem:
         if(e.buttonIncreasingOrNot):
             e.mediumButtonScaler += .005
         else:
-            e.easyButtonScaler -= .005
+            e.mediumButtonScaler -= .005
         e.scaleMediumButtonNow()
 
     def animateHardButton(e):
@@ -478,7 +521,7 @@ class MiniGameMayhem:
         #print("downpressed")
         if e.isMenuScreen():
             e.resetCurrentMenuItemSize()
-            e.increasingOrNot = True
+            e.buttonIncreasingOrNot = True
             e.selectedObjectId += 1
             if(e.selectedObjectId >= len(e.getCurrentButtons())):
                 e.selectedObjectId = 0
@@ -487,18 +530,35 @@ class MiniGameMayhem:
         if e.currentScreen == "title":
             return e.titleButtons
         elif e.currentScreen == "difficulty":
+            #print("printing diff buttons below")
+            #print(e.difficultyButtons)
             return e.difficultyButtons
         elif e.currentScreen == "howToPlay":
             return e.howToPlayButtons
 
     def resetCurrentMenuItemSize(e):
-        if e.currentScreen == "title":
-            if(e.titleButtons[e.selectedObjectId] == "startButton"): #if selected is startButton
-                e.startButtonScaler = e.startButtonScalerOrig
-                e.scaleStartButtonNow()
-            elif(e.titleButtons[e.selectedObjectId] == "howToPlay"): #if selected is How To Play
-                e.howToPlayButtonScaler = e.howToPlayButtonScalerOrig
-                e.scaleHowToPlayButtonNow()
+        curMenuItem = e.getCurrentButtons()[e.selectedObjectId]
+        if curMenuItem == "startButton":
+            e.startButtonScaler = e.startButtonScalerOrig
+            e.scaleStartButtonNow()
+        elif curMenuItem == "howToPlay":
+            e.howToPlayButtonScaler = e.howToPlayButtonScalerOrig
+            e.scaleHowToPlayButtonNow()
+        elif curMenuItem == "easy":
+            e.easyButtonScaler = e.easyButtonScalerOrig
+            e.scaleEasyButtonNow()
+        elif curMenuItem == "medium":
+            e.mediumButtonScaler = e.mediumButtonScalerOrig
+            e.scaleMediumButtonNow()
+        elif curMenuItem == "hard":
+            e.hardButtonScaler = e.hardButtonScalerOrig
+            e.scaleHardButtonNow()
+        elif curMenuItem == "back":
+            e.backButtonScaler = e.backButtonScalerOrig
+            e.scaleBackButtonNow()
+        else:
+            print("error: curMenuItem not found in resetCurrentMenuItemSize")
+        
 
     def isMenuScreen(e):
         if e.currentScreen in e.menuScreens:
@@ -510,7 +570,7 @@ class MiniGameMayhem:
         #print("uppressed")
         if e.isMenuScreen():
             e.resetCurrentMenuItemSize()
-            e.increasingOrNot = True
+            e.buttonIncreasingOrNot = True
             #print("subtracting 1")
             e.selectedObjectId -= 1
             if(e.selectedObjectId < 0):
