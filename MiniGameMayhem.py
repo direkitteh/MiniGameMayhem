@@ -3,6 +3,7 @@ import pygame
 import random
 from gi.repository import Gtk
 from fraction import Fraction
+from fractions import gcd
 
 
 class MiniGameMayhem:
@@ -67,6 +68,7 @@ class MiniGameMayhem:
     theScreen = None
 
     debugPrintLoc = 100
+    debugFracOrNot = False
 
     startButton = pygame.transform.scale(startButtonOrig,\
         (int(round(startButtonOrig.get_width() * startButtonScaler)), \
@@ -250,6 +252,7 @@ class MiniGameMayhem:
             self.debugPrintLoc = 100
             if debugOrNot:
                 self.doTheDebugThing(tryCatchOrNot)
+                self.debugFracOrNot = True
 
             # Flip Display (Update the full display Surface to the screen)
             pygame.display.flip()
@@ -309,46 +312,68 @@ class MiniGameMayhem:
         unSimpX = -1
         unSimpY = -1
         if (level == 1):
-            simpX = e.possibleX[random.randint(1,3)]
-            simpY = e.possibleY[random.randint(0,2)]
-            unSimpX = random.randint(2,3) * simpX
-            unSimpY = random.randint(2,3) * simpY
+            #simpX = e.possibleX[random.randint(,3)]
+            #simpY = e.possibleY[random.randint(0,2)]
+            theFactor = random.randint(2,5)
+            unSimpX = 1 * theFactor
+            unSimpY = random.randint(1,5) * theFactor
         elif (level == 2):
-            simpX = e.possibleX[random.randint(0,6)]
-            simpY = e.possibleY[random.randint(0,5)]
-            unSimpX = random.randint(2,4) * simpX
-            unSimpY =  random.randint(2,4) * simpY
+            #simpX = e.possibleX[random.randint(0,6)]
+            #simpY = e.possibleY[random.randint(0,5)]
+            theFactor = random.randint(3,7)
+            unSimpX = random.randint(1,2) * theFactor
+            unSimpY =  e.possibleY[random.randint(2,4)] * theFactor
         elif (level == 3):
-            simpX = e.possibleX[random.randint(4,7)]
-            simpY = e.possibleY[random.randint(4,7)]
-            unSimpX = random.randint(2,10) * simpX
-            unSimpY =  random.randint(2,10) * simpY
+            #simpX = e.possibleX[random.randint(4,7)]
+            #simpY = e.possibleY[random.randint(4,7)]
+            theFactor = random.randint(7,12)
+            unSimpX =  random.randint(1,7) * theFactor
+            unSimpY =  random.randint(2,10) * theFactor
         #create Fraction
         theFraction = Fraction()
-        theFraction.simpX = simpX
-        theFraction.simpY = simpY
+        #theFraction.simpX = simpX
+        #theFraction.simpY = simpY
+        theFraction.theFactor = theFactor
         theFraction.unSimpX = unSimpX
         theFraction.unSimpY = unSimpY
+        theFraction.gcd = gcd(theFraction.unSimpX, theFraction.unSimpY)
+        theFraction.ansX = theFraction.unSimpX / theFraction.gcd
+        theFraction.ansY = theFraction.unSimpY / theFraction.gcd
         return theFraction
 
     #TODO: finish this rather than just print the values
     def drawFraction(e, theFraction, theScreen):
-        bla1 = "theFraction.simpX = " + str(theFraction.simpX)
-        bla2 = "theFraction.simpY = " + str(theFraction.simpY)
+        if (e.debugFracOrNot == True):
+            e.debugDrawFraction(theFraction, theScreen)
+
+    def debugDrawFraction(e, theFraction, theScreen):
+        bla2 = "theFraction.theFactor = " + str(theFraction.theFactor)
         bla3 = "theFraction.unSimpX = " + str(theFraction.unSimpX)
         bla4 = "theFraction.unSimpY = " + str(theFraction.unSimpY)
+        bla5 = "theFraction.gcd = " + str(theFraction.gcd)
+        bla6 = "theFraction.ansX = " + str(theFraction.ansX)
+        bla7 = "theFraction.ansY = " + str(theFraction.ansY)
         myfont = pygame.font.SysFont("monospace", 22)
-        lab1 = myfont.render(bla1, 1, (255,255,0))
+        #lab1 = myfont.render(bla1, 1, (255,255,0))
         lab2 = myfont.render(bla2, 1, (255,255,0))
         lab3 = myfont.render(bla3, 1, (255,255,0))
         lab4 = myfont.render(bla4, 1, (255,255,0))
-        theScreen.blit(lab1, (200,e.startPrintY))
-        e.startPrintY += 20
+        lab5 = myfont.render(bla5, 1, (255,255,0))
+        lab6 = myfont.render(bla6, 1, (255,255,0))
+        lab7 = myfont.render(bla7, 1, (255,255,0))
+        #theScreen.blit(lab1, (200,e.startPrintY))
+        #e.startPrintY += 20
         theScreen.blit(lab2, (200,e.startPrintY))
         e.startPrintY += 20
         theScreen.blit(lab3, (200,e.startPrintY))
         e.startPrintY += 20
         theScreen.blit(lab4, (200,e.startPrintY))
+        e.startPrintY += 20
+        theScreen.blit(lab5, (200,e.startPrintY))
+        e.startPrintY += 20
+        theScreen.blit(lab6, (200,e.startPrintY))
+        e.startPrintY += 20
+        theScreen.blit(lab7, (200,e.startPrintY))
         e.startPrintY += 20
 
     def animateObject(e):
