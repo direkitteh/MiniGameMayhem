@@ -79,15 +79,7 @@ class MiniGameMayhem:
     def __init__(self):
         # Set up a clock for managing the frame rate.
         self.clock = pygame.time.Clock()
-
-        self.x = -100
-        self.y = 100
-
-        self.vx = 10
-        self.vy = 0
-
         self.paused = False
-        self.direction = 1
         self.scaleAllButtonsNow()
 
     def set_paused(self, paused):
@@ -114,32 +106,6 @@ class MiniGameMayhem:
                 Gtk.main_iteration()
 
             # Pump PyGame messages.
-#            for event in pygame.event.get():
-#                if event.type == pygame.QUIT:
-#                    return
-#                elif event.type == pygame.VIDEORESIZE:
-#                    pygame.display.set_mode(event.size, pygame.RESIZABLE)
-#                elif event.type == pygame.KEYDOWN:
-#                    if event.key == pygame.K_LEFT:
-#                        self.direction = -1
-#                    elif event.key == pygame.K_RIGHT:
-#                        self.direction = 1
-
-            # Move the ball
-#            if not self.paused:
-#                self.x += self.vx * self.direction
-#                if self.direction == 1 and self.x > screen.get_width() + 100:
-#                    self.x = -100
-#                elif self.direction == -1 and self.x < -100:
-#                    self.x = screen.get_width() + 100
-#
-#                self.y += self.vy
-#                if self.y > screen.get_height() - 100:
-#                    self.y = screen.get_height() - 100
-#                    self.vy = -self.vy
-#
-#                self.vy += 5
-
             #handle events
             handled = self.handleEvents()
             if handled == "quit":
@@ -148,23 +114,11 @@ class MiniGameMayhem:
             # Clear Display
             screen.fill((2, 120, 120))  # 255 for white
 
-            # Draw the ball
-            #pygame.draw.circle(screen, (255, 0, 0), (self.x, self.y), 100)
-
-            #self.currentScreen = "title" #for now
-
-            #print("THESCREEN IS!!!!!!!!    " + str(type(self.theScreen)))
-
             #title screen
             if(self.currentScreen == "title"):
                 #title background
                 screen.blit(self.fractionsTitle,(0,0))
-                #startbutton is 366x108, scaled to 183x54, 
-                #print("round blah is: " + str(round(self.startButton.get_height())))
 
-                #print("startbuttonwidth: " + str(self.startButton.get_width()))
-                #print("startbuttonheight: " + str(self.startButton.get_height()))
-                #if(self.selectedObject == "startButton"):
                 #animate selected button
                 self.animateObject()
 
@@ -227,24 +181,10 @@ class MiniGameMayhem:
                     print("level is: " + str(level))
                     theFraction = self.makeFraction(level)
                     self.fractionsToDraw.append(theFraction)
-                    #self.drawFraction(theFraction, screen)
-                    #level = 2
-                    #theFraction = self.makeFraction(level)
-                    #self.drawFraction(theFraction)
-                    #level = 3
-                    #theFraction = self.makeFraction(level)
-                    #self.drawFraction(theFraction)
                     self.tempNumPrinted += 1
                     #level = 1
                 for aFrac in self.fractionsToDraw:
                     self.drawFraction(aFrac, screen)
-            #print("screenwidth IS : " + str(screen.get_width()))
-            #print("screenheighti is : " + str(screen.get_height()))
-            #img = pygame.transform.scale(img,(40,50)) #doesnt work
-            #print(type(img.get_width))
-            #print("width = " + str(img.get_width()))
-            #print("height = " + str(img.get_height()))
-            #print(type(img))
 
             #debug tools
             debugOrNot = True
@@ -278,20 +218,6 @@ class MiniGameMayhem:
         e.debugPrint("the selected button" ,e.getCurrentButtons()[e.selectedObjectId])
         e.debugPrint("buttonIncreasingOrNot",e.buttonIncreasingOrNot)
         e.debugPrint("easyButtonScaler",e.easyButtonScaler)
-#        myfont = pygame.font.SysFont("monospace", 15)
-#        lab = myfont.render("selectedObjectId: " + str(e.selectedObjectId), 1, (255,255,0))
-#        screen.blit(lab, (100,100))
-#        lab2 = myfont.render("currentScreen: " + e.currentScreen, 1, (255,255,0))
-#        screen.blit(lab2, (100,80))
-#        lab3 = myfont.render("the selected button: " + \
-#            e.getCurrentButtons()[e.selectedObjectId], 1, (255,255,0))
-#        screen.blit(lab3, (100,120))
-#        lab5 = myfont.render("buttonIncreasingOrNot: " + \
-#            str(e.buttonIncreasingOrNot), 1, (255,255,0))
-#        screen.blit(lab5, (100,160))
-#        lab4 = myfont.render("easyButtonScaler: " + \
-#            str(e.easyButtonScaler), 1, (255,255,0))
-#        screen.blit(lab4, 1, (100,140))
 
     def debugPrint(e, strTitle, valueToPrint):
         #print("DEBUG PIRITNG!!! W5555555555555555t")
@@ -343,8 +269,12 @@ class MiniGameMayhem:
 
     #TODO: finish this rather than just print the values
     def drawFraction(e, theFraction, theScreen):
-        if (e.debugFracOrNot == True):
+        if (e.debugFracOrNot == False):
+            pass
+        elif (e.debugFracOrNot == True):
             e.debugDrawFraction(theFraction, theScreen)
+        else:
+            print("ERROR, e.debugOrNot is not true or false")
 
     def debugDrawFraction(e, theFraction, theScreen):
         bla2 = "theFraction.theFactor = " + str(theFraction.theFactor)
@@ -583,7 +513,6 @@ class MiniGameMayhem:
             e.scaleBackButtonNow()
         else:
             print("error: curMenuItem not found in resetCurrentMenuItemSize")
-        
 
     def isMenuScreen(e):
         if e.currentScreen in e.menuScreens:
@@ -635,20 +564,6 @@ class MiniGameMayhem:
                 e.currentMenuSize = len(e.difficultyButtons)
         else:
             e.currentMenuSize = -1
-
-        #old
-#        theButtonScaler = 0.1
-#        if(selectedObject == "startButton"):
-#            if(e.startButtonScaler > .75):
-#                e.startButtonScaler -= .01
-#            else:
-#                e.startButtonScaler += .01
-#            theButtonScaler = e.startButtonScaler
-#        theButton = pygame.transform.scale(selectedObject,\
-#            (int(round(selectedObjectOrig.get_width() * theButtonScaler)), \
-#                int(round(selectedObjectOrig.get_height() * theButtonScaler))\
-#            )\
-#        )
 
 # This function is called when the game is run directly from the command line:
 # ./TestGame.py
