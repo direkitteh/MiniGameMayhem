@@ -121,48 +121,26 @@ class MiniGameMayhem:
 
                 #animate selected button
                 self.animateObject()
+                #draw the buttons to the screen
+                self.drawCurrentButtons()
 
                 #display start button
-                screen.blit(self.startButton,\
-                    (int(round(screen.get_width()/2 - self.startButton.get_width()/2)),\
-                        int(round(screen.get_height()/2 - self.startButton.get_height()/2)) \
-                    )\
-                )
+                
                 #display howToPlay button
-                screen.blit(self.howToPlayButton,\
-                    (int(round(screen.get_width()/2 - self.howToPlayButton.get_width()/2)),\
-                        int(round(screen.get_height()/1.6 - self.howToPlayButton.get_height()/2)) \
-                    )\
-                )
+                
             elif(self.currentScreen == "difficulty"):
                 self.animateObject()
-                screen.blit(self.easyButton,\
-                    (int(round(screen.get_width()/2 - self.easyButton.get_width()/2)),\
-                        int(round(screen.get_height()/5 - self.easyButton.get_height()/2))
-                    )\
-                )
-                screen.blit(self.mediumButton,\
-                    (int(round(screen.get_width()/2 - self.mediumButton.get_width()/2)),\
-                        int(round(screen.get_height()/4 + 100 - self.mediumButton.get_height()/2))
-                    )\
-                )
-                screen.blit(self.hardButton,\
-                    (int(round(screen.get_width()/2 - self.hardButton.get_width()/2)),\
-                        int(round(screen.get_height()/3 + 200 - self.hardButton.get_height()/2))
-                    )\
-                )
-                screen.blit(self.backButton,\
-                    (int(round(screen.get_width()/2 - self.backButton.get_width()/2)),\
-                        int(round(screen.get_height()/1.2 - self.backButton.get_height()/2))
-                    )\
-                )
+                #draw the buttons to the screen
+                self.drawCurrentButtons()
             elif(self.currentScreen == "howToPlay"):
                 self.animateObject()
-                screen.blit(self.backButton,\
-                    (int(round(screen.get_width()/2 - self.backButton.get_width()/2)),\
-                        int(round(screen.get_height()/1.2 - self.backButton.get_height()/2))
-                    )\
-                )
+                #draw the buttons to the screen
+                self.drawCurrentButtons()
+                #screen.blit(self.backButton,\
+                #    (int(round(screen.get_width()/2 - self.backButton.get_width()/2)),\
+                #        int(round(screen.get_height()/1.2 - self.backButton.get_height()/2))
+                #    )\
+                #)
             elif self.currentScreen == "easy" or \
                 self.currentScreen == "medium" or \
                     self.currentScreen == "hard":
@@ -275,6 +253,46 @@ class MiniGameMayhem:
             e.debugDrawFraction(theFraction, theScreen)
         else:
             print("ERROR, e.debugOrNot is not true or false")
+
+    def drawCurrentButtons(e):
+        theCurrentButtons = e.getCurrentButtons()
+        for aButton in theCurrentButtons:
+            if (aButton == "startButton"):
+                e.theScreen.blit(e.startButton,\
+                    (int(round(e.theScreen.get_width()/2 - e.startButton.get_width()/2)),\
+                        int(round(e.theScreen.get_height()/2 - e.startButton.get_height()/2)) \
+                    )\
+                )
+            elif (aButton == "howToPlay"):
+                e.theScreen.blit(e.howToPlayButton,\
+                    (int(round(e.theScreen.get_width()/2 - e.howToPlayButton.get_width()/2)),\
+                        int(round(e.theScreen.get_height()/1.6 - e.howToPlayButton.get_height()/2)) \
+                    )\
+                )
+            elif (aButton == "easy"):
+                e.theScreen.blit(e.easyButton,\
+                    (int(round(e.theScreen.get_width()/2 - e.easyButton.get_width()/2)),\
+                        int(round(e.theScreen.get_height()/5 - e.easyButton.get_height()/2))
+                    )\
+                )
+            elif (aButton == "medium"):
+                e.theScreen.blit(e.mediumButton,\
+                    (int(round(e.theScreen.get_width()/2 - e.mediumButton.get_width()/2)),\
+                        int(round(e.theScreen.get_height()/4 + 100 - e.mediumButton.get_height()/2))
+                    )\
+                )
+            elif (aButton == "hard"):
+                e.theScreen.blit(e.hardButton,\
+                    (int(round(e.theScreen.get_width()/2 - e.hardButton.get_width()/2)),\
+                        int(round(e.theScreen.get_height()/3 + 200 - e.hardButton.get_height()/2))
+                    )\
+                )
+            elif (aButton == "back"):
+                e.theScreen.blit(e.backButton,\
+                    (int(round(e.theScreen.get_width()/2 - e.backButton.get_width()/2)),\
+                        int(round(e.theScreen.get_height()/1.2 - e.backButton.get_height()/2))
+                    )\
+                )
 
     def debugDrawFraction(e, theFraction, theScreen):
         bla2 = "theFraction.theFactor = " + str(theFraction.theFactor)
