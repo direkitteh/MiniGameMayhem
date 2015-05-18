@@ -114,33 +114,24 @@ class MiniGameMayhem:
             # Clear Display
             screen.fill((2, 120, 120))  # 255 for white
 
-            #title screen
-            if(self.currentScreen == "title"):
-                #title background
+            #do different things depending on the current screen
+            if(self.currentScreen == "title"): #title screen
+                #blit the title background
                 screen.blit(self.fractionsTitle,(0,0))
-
                 #animate selected button
                 self.animateObject()
                 #draw the buttons to the screen
                 self.drawCurrentButtons()
-
-                #display start button
-                
-                #display howToPlay button
-                
-            elif(self.currentScreen == "difficulty"):
+            elif(self.currentScreen == "difficulty"): #difficulty select screen
+                #animate selected button
                 self.animateObject()
                 #draw the buttons to the screen
                 self.drawCurrentButtons()
-            elif(self.currentScreen == "howToPlay"):
+            elif(self.currentScreen == "howToPlay"): #how to play screen
+                #animate selected button
                 self.animateObject()
                 #draw the buttons to the screen
                 self.drawCurrentButtons()
-                #screen.blit(self.backButton,\
-                #    (int(round(screen.get_width()/2 - self.backButton.get_width()/2)),\
-                #        int(round(screen.get_height()/1.2 - self.backButton.get_height()/2))
-                #    )\
-                #)
             elif self.currentScreen == "easy" or \
                 self.currentScreen == "medium" or \
                     self.currentScreen == "hard":
@@ -152,19 +143,19 @@ class MiniGameMayhem:
                     level = 3
                 else:
                     print("error, currentScreen not providing level properly")
-                #make the fraction
-                #level = 1 #for now
+                #temporary game display stuff
                 self.startPrintY = 160 #TODO: for now
                 while(self.tempNumPrinted < self.tempNumFracToPrint):
                     print("level is: " + str(level))
                     theFraction = self.makeFraction(level)
                     self.fractionsToDraw.append(theFraction)
                     self.tempNumPrinted += 1
-                    #level = 1
                 for aFrac in self.fractionsToDraw:
                     self.drawFraction(aFrac, screen)
 
-            #debug tools
+            #debug tools. set debugOrNot to True to enable. How to use:
+            #set tryCatchOrNot to False if you want debug data able to fail
+            #set debugFracOrNot to True to show in game fraction debug info
             debugOrNot = True
             tryCatchOrNot = True
             self.debugPrintLoc = 100
@@ -190,7 +181,6 @@ class MiniGameMayhem:
             e.actuallyDoTheDebugThing()
 
     def actuallyDoTheDebugThing(e):
-        #print("actuallydoingthedebug thing woooot")
         e.debugPrint("selectedObjectId" ,e.selectedObjectId)
         e.debugPrint("currentScreen" , e.currentScreen)
         e.debugPrint("the selected button" ,e.getCurrentButtons()[e.selectedObjectId])
@@ -198,10 +188,8 @@ class MiniGameMayhem:
         e.debugPrint("easyButtonScaler",e.easyButtonScaler)
 
     def debugPrint(e, strTitle, valueToPrint):
-        #print("DEBUG PIRITNG!!! W5555555555555555t")
         myfont = pygame.font.SysFont("monospace", 15)
         ahaha = myfont.render("" + strTitle + ": " + str(valueToPrint), 1, (255,255,0))
-        #print("###### thescreen" + str(type(e.theScreen)))
         e.theScreen.blit(ahaha, (100, e.debugPrintLoc))
         e.debugPrintLoc += 20
 
@@ -210,33 +198,24 @@ class MiniGameMayhem:
         #reference for possibleX/Y. See actual value at beginning of class
         #possibleX = [0,1,2,3,5,7,9,11,13,17,19,23]
         #possibleY = [1,2,3,5,7,9,11,13,17,19,23]
-        #print("level is : " + str(level))
         simpX = -1
         simpY = -1
         unSimpX = -1
         unSimpY = -1
         if (level == 1):
-            #simpX = e.possibleX[random.randint(,3)]
-            #simpY = e.possibleY[random.randint(0,2)]
             theFactor = random.randint(2,5)
             unSimpX = 1 * theFactor
             unSimpY = random.randint(1,5) * theFactor
         elif (level == 2):
-            #simpX = e.possibleX[random.randint(0,6)]
-            #simpY = e.possibleY[random.randint(0,5)]
             theFactor = random.randint(3,7)
             unSimpX = random.randint(1,2) * theFactor
             unSimpY =  e.possibleY[random.randint(2,4)] * theFactor
         elif (level == 3):
-            #simpX = e.possibleX[random.randint(4,7)]
-            #simpY = e.possibleY[random.randint(4,7)]
             theFactor = random.randint(7,12)
             unSimpX =  random.randint(1,7) * theFactor
             unSimpY =  random.randint(2,10) * theFactor
         #create Fraction
         theFraction = Fraction()
-        #theFraction.simpX = simpX
-        #theFraction.simpY = simpY
         theFraction.theFactor = theFactor
         theFraction.unSimpX = unSimpX
         theFraction.unSimpY = unSimpY
@@ -302,15 +281,12 @@ class MiniGameMayhem:
         bla6 = "theFraction.ansX = " + str(theFraction.ansX)
         bla7 = "theFraction.ansY = " + str(theFraction.ansY)
         myfont = pygame.font.SysFont("monospace", 22)
-        #lab1 = myfont.render(bla1, 1, (255,255,0))
         lab2 = myfont.render(bla2, 1, (255,255,0))
         lab3 = myfont.render(bla3, 1, (255,255,0))
         lab4 = myfont.render(bla4, 1, (255,255,0))
         lab5 = myfont.render(bla5, 1, (255,255,0))
         lab6 = myfont.render(bla6, 1, (255,255,0))
         lab7 = myfont.render(bla7, 1, (255,255,0))
-        #theScreen.blit(lab1, (200,e.startPrintY))
-        #e.startPrintY += 20
         theScreen.blit(lab2, (200,e.startPrintY))
         e.startPrintY += 20
         theScreen.blit(lab3, (200,e.startPrintY))
@@ -325,31 +301,18 @@ class MiniGameMayhem:
         e.startPrintY += 20
 
     def animateObject(e):
-        #titleButtons
-        #currentScreen
-        #if e.currentScreen == "title":
-        #print("hereA")
         theCurrentButtons = e.getCurrentButtons()
-        #print("WHATTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT")
-        #print("printingTHEOIAUSERIVUAWEIORJACWOIEJRCURRENTBUTTONS!!")
-        #print(theCurrentButtons)
         if(theCurrentButtons[e.selectedObjectId] == "startButton"): #if selected is startButton
-            #print("hereB")
             e.animateStartButton()
         elif(theCurrentButtons[e.selectedObjectId] == "howToPlay"): #if selected is How To Play
-            #print("hereC")
             e.animateHowToPlayButton()
         elif(theCurrentButtons[e.selectedObjectId] == "easy"):
-            #print("woohooD")
             e.animateEasyButton()
         elif(theCurrentButtons[e.selectedObjectId] == "medium"):
-            #print("hereE")
             e.animateMediumButton()
         elif(theCurrentButtons[e.selectedObjectId] == "hard"):
-            #print("hereF")
             e.animateHardButton()
         elif(theCurrentButtons[e.selectedObjectId] == "back"):
-            #print("hereG")
             e.animateBackButton()
 
     def animateStartButton(e):
@@ -375,18 +338,13 @@ class MiniGameMayhem:
         e.scaleHowToPlayButtonNow()
 
     def animateEasyButton(e):
-        #print("here1")
         if(e.easyButtonScaler >= .85):
-            #print("here2")
             e.buttonIncreasingOrNot = False
         elif(e.easyButtonScaler <= .65):
-            #print("here3")
             e.buttonIncreasingOrNot = True
         if(e.buttonIncreasingOrNot == True):
-            #print("here4")
             e.easyButtonScaler += .005
         elif(e.buttonIncreasingOrNot == False):
-            #print("here5")
             e.easyButtonScaler -= .005
         e.scaleEasyButtonNow()
 
@@ -475,14 +433,11 @@ class MiniGameMayhem:
 
     def handleEvents(e):
         for event in pygame.event.get():
-            #print("event: " + str(event))
-            #print("event in events")
             if event.type == pygame.QUIT:
                 return "quit"
             elif event.type == pygame.VIDEORESIZE:
                 pygame.display.set_mode(event.size, pygame.RESIZABLE)
             elif event.type == pygame.KEYDOWN:
-                #print("pygame.keydown done")
                 if event.key == pygame.K_DOWN:
                     e.kDownPressed()
                 elif event.key == pygame.K_UP:
@@ -491,7 +446,6 @@ class MiniGameMayhem:
                     e.kEnterPressed()
 
     def kDownPressed(e):
-        #print("downpressed")
         if e.isMenuScreen():
             e.resetCurrentMenuItemSize()
             e.buttonIncreasingOrNot = True
@@ -503,8 +457,6 @@ class MiniGameMayhem:
         if e.currentScreen == "title":
             return e.titleButtons
         elif e.currentScreen == "difficulty":
-            #print("printing diff buttons below")
-            #print(e.difficultyButtons)
             return e.difficultyButtons
         elif e.currentScreen == "howToPlay":
             return e.howToPlayButtons
@@ -539,19 +491,14 @@ class MiniGameMayhem:
             return False
 
     def kUpPressed(e):
-        #print("uppressed")
         if e.isMenuScreen():
             e.resetCurrentMenuItemSize()
             e.buttonIncreasingOrNot = True
-            #print("subtracting 1")
             e.selectedObjectId -= 1
             if(e.selectedObjectId < 0):
-                #print("len of title buttons: " + str(len(e.titleButtons)))
                 e.selectedObjectId = len(e.getCurrentButtons()) - 1
 
     def kEnterPressed(e):
-        #print("enterpressed")
-        #if e.currentScreen == "title":
         try:
             if e.getCurrentButtons()[e.selectedObjectId] == "howToPlay":
                 e.switchToScreen("howToPlay")
