@@ -1,12 +1,12 @@
 #!/usr/bin/python
+from fractions import gcd
 import pygame
 import random
 from gi.repository import Gtk
 from fraction import Fraction
-from fractions import gcd
 from gamestate import *
 
-class Fractions(GameState):
+class FractionsGame(GameState):
     #global variables
     possibleX = [0,1,2,3,5,7,9,11,13,17,19,23]
     possibleY = [1,2,3,5,7,9,11,13,17,19,23]
