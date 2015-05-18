@@ -78,6 +78,7 @@ class MiniGameMayhem:
     answerScore = None
     currentAnsNumerator = ""
     currentAnsDenominator = ""
+    selectedAnsPart = "numerator" #only "numerator" or "denominator"
 
     #timer stuff
     timerMax = None
@@ -122,13 +123,16 @@ class MiniGameMayhem:
                 Gtk.main_iteration()
 
             # Pump PyGame messages.
+
+            # Clear Display (fill it with proper color)
+            screen.fill((2, 120, 120))
+
             #handle events
             handled = self.handleEvents()
             if handled == "quit":
                 return
 
-            # Clear Display (fill it with proper color)
-            screen.fill((2, 120, 120))
+            
 
             #do different things depending on the current screen
             if(self.currentScreen == "title"): #title screen
@@ -190,13 +194,10 @@ class MiniGameMayhem:
 
     def handleGameplay(e):
         if (e.roundIsInitalized == False):
-            print("A")
             e.initializeRound()
         elif(e.fractionIsSolved):
-            print("B")
             e.fractionWasSolved()
         else:
-            #print("C")
             e.updateGameState()
 
     def initializeRound(e):
@@ -206,6 +207,7 @@ class MiniGameMayhem:
         e.answerScore = e.getMaxAnswerScore()
         e.currentAnsNumerator = ""
         e.currentAnsDenominator = ""
+        e.selectedAnsPart = "numerator"
         #decide on timer based on difficulty
         if(e.level == 1):
             e.timerMax = 60
@@ -217,8 +219,10 @@ class MiniGameMayhem:
         e.roundIsInitalized = True
 
     def fractionWasSolved(e):
+        e.fractionIsSolved = False
         e.currentAnsNumerator = ""
         e.currentAnsDenominator = ""
+        e.selectedAnsPart = "numerator"
         e.currentScore += e.answerScore
         e.newFraction()
         e.updateGameState()
@@ -228,13 +232,15 @@ class MiniGameMayhem:
         #redraw screen
         e.drawFraction(e.theCurrentFraction, e.theScreen)
         #decay answerScore
-        e.answerScore -= .1
+        e.answerScore -= .1 * e.level
         if (e.answerScore <10):
             e.answerScore = 10
         #redraw more stuff
         myFont = pygame.font.SysFont("monospace", 32)
         answerScoreRender = myFont.render(str(int(round(e.answerScore))), 1, (255,255,0))
         e.theScreen.blit(answerScoreRender, (400,200))
+        currentScore = myFont.render("Total Score: " + str(int(round(e.currentScore))), 1, (255,255,0))
+        e.theScreen.blit(currentScore, (522, 155))
 
     def newFraction(e):
         e.theCurrentFraction = e.makeFraction()
@@ -254,6 +260,7 @@ class MiniGameMayhem:
             e.actuallyDoTheDebugThing()
 
     def actuallyDoTheDebugThing(e):
+        e.debugPrint("e.isMenuScreen()", e.isMenuScreen())
         e.debugPrint("selectedObjectId" ,e.selectedObjectId)
         e.debugPrint("currentScreen" , e.currentScreen)
         e.debugPrint("the selected button" ,e.getCurrentButtons()[e.selectedObjectId])
@@ -304,15 +311,22 @@ class MiniGameMayhem:
             numerator = myfont.render(str(theFraction.unSimpX), 1, (255,255,0))
             denominator = myfont.render(str(theFraction.unSimpY), 1, (255,255,0))
             divideSign = myfont.render("/", 1, (255,255,0))
-            gcd = myfont.render(str(theFraction.gcd), 1, (255,255,0))
             equalsSign = myfont.render("=", 1, (255,255,0))
             horizontalLines = myfont.render("__", 1, (255,255,0))
+            #if level is 1, show the GCD, otherwise show ?
+            if(e.level == 1):
+                gcd = myfont.render(str(theFraction.gcd), 1, (255,255,0))
+            else:
+                gcd = myfont.render("?", 1, (255,255,0))
 
+            #show ? if nothing is inputed yet for numerator or denominator
             if(e.currentAnsNumerator == ""):
                 ansNumerator = myfont.render("?", 1, (255,255,0))
-                ansDenominator = myfont.render("?", 1, (255,255,0))
             else:
                 ansNumerator = myfont.render(e.currentAnsNumerator, 1, (255,255,0))
+            if(e.currentAnsDenominator == ""):
+                ansDenominator = myfont.render("?", 1, (255,255,0))
+            else:
                 ansDenominator = myfont.render(e.currentAnsDenominator, 1, (255,255,0))
 
             e.theScreen.blit(numerator, (250, 350))
@@ -529,28 +543,6 @@ class MiniGameMayhem:
             )\
         )
 
-    def handleEvents(e):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                return "quit"
-            elif event.type == pygame.VIDEORESIZE:
-                pygame.display.set_mode(event.size, pygame.RESIZABLE)
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_DOWN:
-                    e.kDownPressed()
-                elif event.key == pygame.K_UP:
-                    e.kUpPressed()
-                elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
-                    e.kEnterPressed()
-
-    def kDownPressed(e):
-        if e.isMenuScreen():
-            e.resetCurrentMenuItemSize()
-            e.buttonIncreasingOrNot = True
-            e.selectedObjectId += 1
-            if(e.selectedObjectId >= len(e.getCurrentButtons())):
-                e.selectedObjectId = 0
-
     def getCurrentButtons(e):
         if e.currentScreen == "title":
             return e.titleButtons
@@ -583,10 +575,83 @@ class MiniGameMayhem:
             print("error: curMenuItem not found in resetCurrentMenuItemSize")
 
     def isMenuScreen(e):
-        if e.currentScreen in e.menuScreens:
-            return True
-        else:
+        try:
+            if e.currentScreen in e.menuScreens:
+                return True
+            else:
+                return False
+        except:
             return False
+
+    def handleEvents(e):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return "quit"
+            elif event.type == pygame.VIDEORESIZE:
+                pygame.display.set_mode(event.size, pygame.RESIZABLE)
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_DOWN:
+                    e.kDownPressed()
+                elif event.key == pygame.K_UP:
+                    e.kUpPressed()
+                elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
+                    e.kEnterPressed()
+                else:
+                    e.handleMoreInGameEvents(event)
+
+    #handles more keys than handleEvents, but only if the game is not on a menu
+    def handleMoreInGameEvents(e, event):
+        if e.isMenuScreen():
+            pass
+        else:
+            key = event.key
+            if key == pygame.K_0 or key == pygame.K_KP0:
+                e.ansAddValue("0")
+            elif key == pygame.K_1 or key == pygame.K_KP1:
+                e.ansAddValue("1")
+            elif key == pygame.K_2 or key == pygame.K_KP2:
+                e.ansAddValue("2")
+            elif key == pygame.K_3 or key == pygame.K_KP3:
+                e.ansAddValue("3")
+            elif key == pygame.K_4 or key == pygame.K_KP4:
+                e.ansAddValue("4")
+            elif key == pygame.K_5 or key == pygame.K_KP5:
+                e.ansAddValue("5")
+            elif key == pygame.K_6 or key == pygame.K_KP6:
+                e.ansAddValue("6")
+            elif key == pygame.K_7 or key == pygame.K_KP7:
+                e.ansAddValue("7")
+            elif key == pygame.K_8 or key == pygame.K_KP8:
+                e.ansAddValue("8")
+            elif key == pygame.K_9 or key == pygame.K_KP9:
+                e.ansAddValue("9")
+            elif key == pygame.K_BACKSPACE:
+                e.ansBackspace()
+            elif key == pygame.K_RIGHT or \
+                key == pygame.K_LEFT or \
+                key == pygame.K_TAB or \
+                key == pygame.K_KP_DIVIDE or \
+                key == pygame.K_SLASH:
+                e.switchSelectedAnsPart()
+
+    #strToAdd: the character to add to the current answer's string
+    def ansAddValue(e, strToAdd):
+        if(e.selectedAnsPart == "numerator"):
+            e.currentAnsNumerator = "" + e.currentAnsNumerator + str(strToAdd)
+        elif(e.selectedAnsPart == "denominator"):
+            e.currentAnsDenominator = "" + e.currentAnsDenominator + str(strToAdd)
+        else:
+            print("error: selectedAnsPart not numerator or denominator")
+
+    def ansBackspace(e):
+        if(e.selectedAnsPart == "numerator"):
+            if len(e.currentAnsNumerator) > 0:
+                e.currentAnsNumerator = e.currentAnsNumerator[:-1]
+        elif(e.selectedAnsPart == "denominator"):
+            if len(e.currentAnsDenominator) > 0:
+                e.currentAnsDenominator = e.currentAnsDenominator[:-1]
+        else:
+            print("error: selectedAnsPart not numerator or denominator")
 
     def kUpPressed(e):
         if e.isMenuScreen():
@@ -595,23 +660,68 @@ class MiniGameMayhem:
             e.selectedObjectId -= 1
             if(e.selectedObjectId < 0):
                 e.selectedObjectId = len(e.getCurrentButtons()) - 1
+        else:
+            e.switchSelectedAnsPart()
+
+    def kDownPressed(e):
+        if e.isMenuScreen():
+            e.resetCurrentMenuItemSize()
+            e.buttonIncreasingOrNot = True
+            e.selectedObjectId += 1
+            if(e.selectedObjectId >= len(e.getCurrentButtons())):
+                e.selectedObjectId = 0
+        else:
+            e.switchSelectedAnsPart()
 
     def kEnterPressed(e):
+        if e.isMenuScreen():
+            try:
+                if e.getCurrentButtons()[e.selectedObjectId] == "howToPlay":
+                    e.switchToScreen("howToPlay")
+                elif e.getCurrentButtons()[e.selectedObjectId] == "startButton":
+                    e.switchToScreen("difficulty")
+                elif e.getCurrentButtons()[e.selectedObjectId] == "back":
+                    e.switchToScreen("prev")
+                elif e.getCurrentButtons()[e.selectedObjectId] == "easy":
+                    e.switchToScreen("easy")
+                elif e.getCurrentButtons()[e.selectedObjectId] == "medium":
+                    e.switchToScreen("medium")
+                elif e.getCurrentButtons()[e.selectedObjectId] == "hard":
+                    e.switchToScreen("hard")
+            except:
+                print("error? menu button not found")
+        else:
+            e.checkAnswer()
+
+    def switchSelectedAnsPart(e):
+        if(e.selectedAnsPart == "numerator"):
+            e.selectedAnsPart = "denominator"
+        elif e.selectedAnsPart == "denominator":
+            e.selectedAnsPart = "numerator"
+        else:
+            print("error, selectedAnsPart != numerator or denominator")
+
+    def checkAnswer(e):
         try:
-            if e.getCurrentButtons()[e.selectedObjectId] == "howToPlay":
-                e.switchToScreen("howToPlay")
-            elif e.getCurrentButtons()[e.selectedObjectId] == "startButton":
-                e.switchToScreen("difficulty")
-            elif e.getCurrentButtons()[e.selectedObjectId] == "back":
-                e.switchToScreen("prev")
-            elif e.getCurrentButtons()[e.selectedObjectId] == "easy":
-                e.switchToScreen("easy")
-            elif e.getCurrentButtons()[e.selectedObjectId] == "medium":
-                e.switchToScreen("medium")
-            elif e.getCurrentButtons()[e.selectedObjectId] == "hard":
-                e.switchToScreen("hard")
+            if int(e.currentAnsNumerator) == e.theCurrentFraction.ansX and \
+                int(e.currentAnsDenominator) == e.theCurrentFraction.ansY:
+                e.drawCheckMark()
+                e.fractionIsSolved = True
+            else:
+                e.drawXMark()
         except:
-            print("error? enter pressed while playing")
+            e.drawXMark()
+
+    def drawCheckMark(e):
+        myfont = pygame.font.SysFont("monospace", 32)
+        checkMark = myfont.render("RIGHT", 1, (255,255,0))
+        e.theScreen.blit(checkMark, (222, 222))
+
+    def drawXMark(e):
+        myfont = pygame.font.SysFont("monospace", 32)
+        XMark = myfont.render("WRONGGGGGGGGGGGGGGGGGGGGGG", 1, (255,255,0))
+        e.theScreen.blit(XMark, (222, 222))
+        e.answerScore -= 10 * e.level
 
     def switchToScreen(e, theScreen):
         if theScreen == "prev":
