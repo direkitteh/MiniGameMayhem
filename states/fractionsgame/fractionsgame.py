@@ -55,6 +55,7 @@ class FractionsGame(GameState):
     backButton = backButtonOrig
 
     #howToPlay screen
+    howToPlayImage = pygame.image.load("states/fractionsgame/fractionimages/howtoplayscreen.png")
     howToPlayButtons = ["back"]
 
     #results screen
@@ -163,6 +164,7 @@ class FractionsGame(GameState):
                 self.drawCurrentButtons()
             elif(self.currentScreen == "howToPlay"): #how to play screen
                 #animate selected button
+                self.theScreen.blit(self.howToPlayImage, (0,0))
                 self.animateObject()
                 #draw the buttons to the screen
                 self.drawCurrentButtons()
@@ -415,7 +417,7 @@ class FractionsGame(GameState):
             elif (aButton == "back"):
                 e.theScreen.blit(e.backButton,\
                     (int(round(e.theScreen.get_width()/2 - e.backButton.get_width()/2)),\
-                        int(round(e.theScreen.get_height()/1.2 - e.backButton.get_height()/2))
+                        int(round(e.theScreen.get_height()/1.165 - e.backButton.get_height()/2))
                     )\
                 )
             elif (aButton == "playAgain"):
