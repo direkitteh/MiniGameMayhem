@@ -56,8 +56,12 @@ class MiniGameMayhem:
 
     #howToPlay screen
     howToPlayButtons = ["back"]
+
+    #results screen
+    resultsButtons = ["playAgain", "menu"]
+
     #screens: title, howToPlay, difficulty, playing
-    menuScreens = ["title", "howToPlay", "difficulty"]
+    menuScreens = ["title", "howToPlay", "difficulty", "results"]
     currentScreen = "title"
     prevScreen = "title"
     currentMenuSize = len(titleButtons)
@@ -85,6 +89,7 @@ class MiniGameMayhem:
     #timer stuff
     timerMax = None
     timerCur = None
+    gameIsOver = False
 
     debugPrintLoc = 100
     debugFracOrNot = False
@@ -176,7 +181,7 @@ class MiniGameMayhem:
                     for aFrac in self.fractionsToDraw:
                         self.drawFraction(aFrac, screen)
                 else: #actual game display stuff
-                    self.handleGameplay()        
+                    self.handleGameplay()
 
             #debug tools. set debugOrNot to True to enable. How to use:
             #set tryCatchOrNot to False if you want debug data able to fail
@@ -195,15 +200,21 @@ class MiniGameMayhem:
             self.clock.tick(self.framerate)
 
     def handleGameplay(e):
-        if (e.roundIsInitalized == False):
+        if(e.gameIsOver):
+            e.switchToResultsScreen()
+        elif (e.roundIsInitalized == False):
             e.initializeRound()
         elif(e.fractionIsSolved):
             e.fractionWasSolved()
         else:
             e.updateGameState()
 
+    def switchToResultsScreen(e):
+        self.currentScreen = "results"
+
     def initializeRound(e):
         e.newFraction()
+        e.gameIsOver = False
         e.fractionIsSolved = False
         e.currentScore = 0
         e.answerScore = e.getMaxAnswerScore()
@@ -235,6 +246,9 @@ class MiniGameMayhem:
             e.answerScore = 10
         #decay timer by 1 frame
         e.timerCur -= 1
+        #check if game is over
+        if(e.timerCur <= 0):
+            gameIsOver = True
         #redraw more stuff
         myFont = pygame.font.SysFont("monospace", 32)
         answerScoreRender = myFont.render(str(int(round(e.answerScore))), 1, (255,255,0))
@@ -248,7 +262,8 @@ class MiniGameMayhem:
         e.theCurrentFraction = e.makeFraction()
 
     def getMaxAnswerScore(e):
-        return 100 + 200 * (e.level - 1)
+        maxAnswerScore = 100 + 200 * (e.level - 1)
+        return maxAnswerScore
 
     def doTheDebugThing(e, tryCatchOrNot):
         if (tryCatchOrNot):
