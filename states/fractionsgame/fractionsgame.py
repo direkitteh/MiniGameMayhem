@@ -13,12 +13,12 @@ class FractionsGame(GameState):
     tempNumFracToPrint = 4
     tempNumPrinted = 0;
     #title screen
-    fractionsTitle = pygame.image.load("fractionimages/fractionstitle.png")
+    fractionsTitle = pygame.image.load("states/fractionsgame/fractionimages/fractionstitle.png")
     titleButtons = ["startButton", "howToPlay"]
     #startButton
     startButtonScalerOrig = .5
     startButtonScaler = startButtonScalerOrig
-    startButtonOrig = pygame.image.load("fractionimages/startbutton.png")
+    startButtonOrig = pygame.image.load("states/fractionsgame/fractionimages/startbutton.png")
     startButton = startButtonOrig
     #self.scaleStartButtonNow()
     #TODO: delete this line below this, the uber long one
@@ -27,7 +27,7 @@ class FractionsGame(GameState):
     #howToPlayButton
     howToPlayButtonScalerOrig = .5
     howToPlayButtonScaler = howToPlayButtonScalerOrig
-    howToPlayButtonOrig = pygame.image.load("fractionimages/howToPlayButton.png")
+    howToPlayButtonOrig = pygame.image.load("states/fractionsgame/fractionimages/howToPlayButton.png")
     howToPlayButton = howToPlayButtonOrig
     #self.scaleHowToPlayButtonNow()
     #TODO: delete the line below this, the uber long one
@@ -39,19 +39,19 @@ class FractionsGame(GameState):
     difficultyButtons = ["easy", "medium", "hard", "back"]
     easyButtonScalerOrig = .65
     easyButtonScaler = easyButtonScalerOrig
-    easyButtonOrig = pygame.image.load("fractionimages/easy.png")
+    easyButtonOrig = pygame.image.load("states/fractionsgame/fractionimages/easy.png")
     easyButton = easyButtonOrig
     mediumButtonScalerOrig = .65
     mediumButtonScaler = mediumButtonScalerOrig
-    mediumButtonOrig = pygame.image.load("fractionimages/medium.png")
+    mediumButtonOrig = pygame.image.load("states/fractionsgame/fractionimages/medium.png")
     mediumButton = mediumButtonOrig
     hardButtonScalerOrig = .65
     hardButtonScaler = hardButtonScalerOrig
-    hardButtonOrig = pygame.image.load("fractionimages/hard.png")
+    hardButtonOrig = pygame.image.load("states/fractionsgame/fractionimages/hard.png")
     hardButton = hardButtonOrig
     backButtonScalerOrig = .5
     backButtonScaler = backButtonScalerOrig
-    backButtonOrig = pygame.image.load("fractionimages/back.png")
+    backButtonOrig = pygame.image.load("states/fractionsgame/fractionimages/back.png")
     backButton = backButtonOrig
 
     #howToPlay screen
@@ -61,11 +61,11 @@ class FractionsGame(GameState):
     resultsButtons = ["playAgain", "menu"]
     playAgainButtonScalerOrig = .65
     playAgainButtonScaler = playAgainButtonScalerOrig
-    playAgainButtonOrig = pygame.image.load("fractionimages/playAgain.png")
+    playAgainButtonOrig = pygame.image.load("states/fractionsgame/fractionimages/playAgain.png")
     playAgainButton = playAgainButtonOrig
     menuButtonScalerOrig = .65
     menuButtonScaler = menuButtonScalerOrig
-    menuButtonOrig = pygame.image.load("fractionimages/menu.png")
+    menuButtonOrig = pygame.image.load("states/fractionsgame/fractionimages/menu.png")
     menuButton = menuButtonOrig
 
     #screens: title, howToPlay, difficulty, playing
