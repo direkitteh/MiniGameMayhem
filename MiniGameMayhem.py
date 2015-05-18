@@ -233,7 +233,7 @@ class MiniGameMayhem:
         e.drawFraction(e.theCurrentFraction, e.theScreen)
         #decay answerScore
         e.answerScore -= .1 * e.level
-        if (e.answerScore <10):
+        if (e.answerScore < (10 * e.level):
             e.answerScore = 10
         #redraw more stuff
         myFont = pygame.font.SysFont("monospace", 32)
