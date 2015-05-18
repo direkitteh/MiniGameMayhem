@@ -65,6 +65,8 @@ class MiniGameMayhem:
     startPrintY = 160 #TEMPORARY TO PRINT FRACTIONS AS TEXT IN GAME
     fractionsToDraw = []
 
+    framerate = 30
+
     level = None
 
     theScreen = None
@@ -190,7 +192,7 @@ class MiniGameMayhem:
             pygame.display.flip()
 
             # Try to stay at 30 FPS
-            self.clock.tick(30)
+            self.clock.tick(self.framerate)
 
     def handleGameplay(e):
         if (e.roundIsInitalized == False):
@@ -208,13 +210,9 @@ class MiniGameMayhem:
         e.currentAnsNumerator = ""
         e.currentAnsDenominator = ""
         e.selectedAnsPart = "numerator"
-        #decide on timer based on difficulty
-        if(e.level == 1):
-            e.timerMax = 60
-        elif(e.level == 2):
-            e.timerMax = 60
-        elif(e.level == 3):
-            e.timerMax = 60
+        maxTimeInSec = 60
+        e.timerMax = 60 * e.framerate
+        e.timerCur = e.timerMax
         #done
         e.roundIsInitalized = True
 
@@ -224,23 +222,27 @@ class MiniGameMayhem:
         e.currentAnsDenominator = ""
         e.selectedAnsPart = "numerator"
         e.currentScore += e.answerScore
+        e.answerScore = e.getMaxAnswerScore()
         e.newFraction()
         e.updateGameState()
-        e.answerScore = e.getMaxAnswerScore()
 
     def updateGameState(e):
         #redraw screen
         e.drawFraction(e.theCurrentFraction, e.theScreen)
         #decay answerScore
         e.answerScore -= .1 * e.level
-        if (e.answerScore < (10 * e.level):
+        if (e.answerScore < (10 * e.level)):
             e.answerScore = 10
+        #decay timer by 1 frame
+        e.timerCur -= 1
         #redraw more stuff
         myFont = pygame.font.SysFont("monospace", 32)
         answerScoreRender = myFont.render(str(int(round(e.answerScore))), 1, (255,255,0))
         e.theScreen.blit(answerScoreRender, (400,200))
         currentScore = myFont.render("Total Score: " + str(int(round(e.currentScore))), 1, (255,255,0))
+        currentTime = myFont.render("Time: " + str(int(round(e.timerCur/e.framerate))), 1, (255,255,0))
         e.theScreen.blit(currentScore, (522, 155))
+        e.theScreen.blit(currentTime, (522,105))
 
     def newFraction(e):
         e.theCurrentFraction = e.makeFraction()
