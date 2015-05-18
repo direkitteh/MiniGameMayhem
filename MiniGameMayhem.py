@@ -59,6 +59,14 @@ class MiniGameMayhem:
 
     #results screen
     resultsButtons = ["playAgain", "menu"]
+    playAgainButtonScalerOrig = .65
+    playAgainButtonScaler = playAgainButtonScalerOrig
+    playAgainButtonOrig = pygame.image.load("fractionimages/playAgain.png")
+    playAgainButton = playAgainButtonOrig
+    menuButtonScalerOrig = .65
+    menuButtonScaler = menuButtonScalerOrig
+    menuButtonOrig = pygame.image.load("fractionimages/menu.png")
+    menuButton = menuButtonOrig
 
     #screens: title, howToPlay, difficulty, playing
     menuScreens = ["title", "howToPlay", "difficulty", "results"]
@@ -139,8 +147,6 @@ class MiniGameMayhem:
             if handled == "quit":
                 return
 
-            
-
             #do different things depending on the current screen
             if(self.currentScreen == "title"): #title screen
                 #blit the title background
@@ -182,11 +188,17 @@ class MiniGameMayhem:
                         self.drawFraction(aFrac, screen)
                 else: #actual game display stuff
                     self.handleGameplay()
+            elif self.currentScreen == "results":
+                #animate selected button
+                self.animateObject()
+                #draw the buttons to the screen
+                self.drawCurrentButtons()
+                self.drawYourScore()
 
             #debug tools. set debugOrNot to True to enable. How to use:
             #set tryCatchOrNot to False if you want debug data able to fail
             #set debugFracOrNot to True to show in game fraction debug info
-            debugOrNot = True
+            debugOrNot = False
             tryCatchOrNot = True
             self.debugPrintLoc = 100
             if debugOrNot:
@@ -199,18 +211,22 @@ class MiniGameMayhem:
             # Try to stay at 30 FPS
             self.clock.tick(self.framerate)
 
+    def drawYourScore(e):
+        myFont = pygame.font.SysFont("monospace", 32)
+        totalScore = myFont.render("Score: " + str(int(round(e.currentScore))), 1, (255,255,0))
+        e.theScreen.blit(totalScore, (e.theScreen.get_width()/2 - totalScore.get_width()/2, e.theScreen.get_height()/6))
+
     def handleGameplay(e):
         if(e.gameIsOver):
-            e.switchToResultsScreen()
+            e.gameIsOver = False
+            e.roundIsInitalized = False
+            e.switchToScreen("results")
         elif (e.roundIsInitalized == False):
             e.initializeRound()
         elif(e.fractionIsSolved):
             e.fractionWasSolved()
         else:
             e.updateGameState()
-
-    def switchToResultsScreen(e):
-        self.currentScreen = "results"
 
     def initializeRound(e):
         e.newFraction()
@@ -222,7 +238,7 @@ class MiniGameMayhem:
         e.currentAnsDenominator = ""
         e.selectedAnsPart = "numerator"
         maxTimeInSec = 60
-        e.timerMax = 60 * e.framerate
+        e.timerMax = maxTimeInSec * e.framerate
         e.timerCur = e.timerMax
         #done
         e.roundIsInitalized = True
@@ -248,7 +264,7 @@ class MiniGameMayhem:
         e.timerCur -= 1
         #check if game is over
         if(e.timerCur <= 0):
-            gameIsOver = True
+            e.gameIsOver = True
         #redraw more stuff
         myFont = pygame.font.SysFont("monospace", 32)
         answerScoreRender = myFont.render(str(int(round(e.answerScore))), 1, (255,255,0))
@@ -401,6 +417,18 @@ class MiniGameMayhem:
                         int(round(e.theScreen.get_height()/1.2 - e.backButton.get_height()/2))
                     )\
                 )
+            elif (aButton == "playAgain"):
+                e.theScreen.blit(e.playAgainButton,\
+                    (int(round(e.theScreen.get_width()/2 - e.playAgainButton.get_width()/2)),\
+                        int(round(e.theScreen.get_height()/2 - e.playAgainButton.get_height()/2))
+                    )\
+                )
+            elif (aButton == "menu"):
+                e.theScreen.blit(e.menuButton,\
+                    (int(round(e.theScreen.get_width()/2 - e.menuButton.get_width()/2)),\
+                        int(round(e.theScreen.get_height()/1.5 - e.menuButton.get_height()/2))
+                    )\
+                )
 
     def debugDrawFraction(e, theFraction, theScreen):
         bla2 = "theFraction.theFactor = " + str(theFraction.theFactor)
@@ -443,6 +471,32 @@ class MiniGameMayhem:
             e.animateHardButton()
         elif(theCurrentButtons[e.selectedObjectId] == "back"):
             e.animateBackButton()
+        elif(theCurrentButtons[e.selectedObjectId] == "menu"):
+            e.animateMenuButton()
+        elif(theCurrentButtons[e.selectedObjectId] == "playAgain"):
+            e.animatePlayAgainButton()
+
+    def animateMenuButton(e):
+        if(e.menuButtonScaler >= .85):
+            e.buttonIncreasingOrNot = False
+        elif(e.menuButtonScaler <= .65):
+            e.buttonIncreasingOrNot = True
+        if(e.buttonIncreasingOrNot):
+            e.menuButtonScaler += .005
+        else:
+            e.menuButtonScaler -= .005
+        e.scaleMenuButtonNow()
+
+    def animatePlayAgainButton(e):
+        if(e.playAgainButtonScaler >= .85):
+            e.buttonIncreasingOrNot = False
+        elif(e.playAgainButtonScaler <= .65):
+            e.buttonIncreasingOrNot = True
+        if(e.buttonIncreasingOrNot):
+            e.playAgainButtonScaler += .005
+        else:
+            e.playAgainButtonScaler -= .005
+        e.scalePlayAgainButtonNow()
 
     def animateStartButton(e):
         if(e.startButtonScaler >= .75):
@@ -517,6 +571,8 @@ class MiniGameMayhem:
         e.scaleMediumButtonNow()
         e.scaleHardButtonNow()
         e.scaleBackButtonNow()
+        e.scalePlayAgainButtonNow()
+        e.scaleMenuButtonNow()
 
     def scaleStartButtonNow(e):
         e.startButton = pygame.transform.scale(e.startButtonOrig,\
@@ -560,6 +616,20 @@ class MiniGameMayhem:
             )\
         )
 
+    def scalePlayAgainButtonNow(e):
+        e.playAgainButton = pygame.transform.scale(e.playAgainButtonOrig,\
+            (int(round(e.playAgainButtonOrig.get_width() * e.playAgainButtonScaler)), \
+                int(round(e.playAgainButtonOrig.get_height() * e.playAgainButtonScaler))\
+            )\
+        )
+
+    def scaleMenuButtonNow(e):
+        e.menuButton = pygame.transform.scale(e.menuButtonOrig,\
+            (int(round(e.menuButtonOrig.get_width() * e.menuButtonScaler)), \
+                int(round(e.menuButtonOrig.get_height() * e.menuButtonScaler))\
+            )\
+        )
+
     def getCurrentButtons(e):
         if e.currentScreen == "title":
             return e.titleButtons
@@ -567,6 +637,8 @@ class MiniGameMayhem:
             return e.difficultyButtons
         elif e.currentScreen == "howToPlay":
             return e.howToPlayButtons
+        elif e.currentScreen == "results":
+            return e.resultsButtons
 
     def resetCurrentMenuItemSize(e):
         curMenuItem = e.getCurrentButtons()[e.selectedObjectId]
@@ -588,6 +660,12 @@ class MiniGameMayhem:
         elif curMenuItem == "back":
             e.backButtonScaler = e.backButtonScalerOrig
             e.scaleBackButtonNow()
+        elif curMenuItem == "playAgain":
+            e.playAgainButtonScaler = e.playAgainButtonScalerOrig
+            e.scalePlayAgainButtonNow()
+        elif curMenuItem == "menu":
+            e.menuButtonScaler = e.menuButtonScalerOrig
+            e.scaleMenuButtonNow()
         else:
             print("error: curMenuItem not found in resetCurrentMenuItemSize")
 
@@ -694,17 +772,34 @@ class MiniGameMayhem:
         if e.isMenuScreen():
             try:
                 if e.getCurrentButtons()[e.selectedObjectId] == "howToPlay":
+                    e.resetCurrentMenuItemSize()
                     e.switchToScreen("howToPlay")
                 elif e.getCurrentButtons()[e.selectedObjectId] == "startButton":
+                    e.resetCurrentMenuItemSize()
                     e.switchToScreen("difficulty")
                 elif e.getCurrentButtons()[e.selectedObjectId] == "back":
+                    e.resetCurrentMenuItemSize()
                     e.switchToScreen("prev")
                 elif e.getCurrentButtons()[e.selectedObjectId] == "easy":
+                    e.resetCurrentMenuItemSize()
                     e.switchToScreen("easy")
                 elif e.getCurrentButtons()[e.selectedObjectId] == "medium":
+                    e.resetCurrentMenuItemSize()
                     e.switchToScreen("medium")
                 elif e.getCurrentButtons()[e.selectedObjectId] == "hard":
+                    e.resetCurrentMenuItemSize()
                     e.switchToScreen("hard")
+                elif e.getCurrentButtons()[e.selectedObjectId] == "menu":
+                    e.resetCurrentMenuItemSize()
+                    e.switchToScreen("title")
+                elif e.getCurrentButtons()[e.selectedObjectId] == "playAgain":
+                    e.resetCurrentMenuItemSize()
+                    if (e.level == 1):
+                        e.switchToScreen("easy")
+                    if (e.level == 2):
+                        e.switchToScreen("medium")
+                    if (e.level == 3):
+                        e.switchToScreen("hard")
             except:
                 print("error? menu button not found")
         else:
@@ -752,6 +847,8 @@ class MiniGameMayhem:
                 e.currentMenuSize = len(e.howToPlayButtons)
             elif theScreen == "difficulty":
                 e.currentMenuSize = len(e.difficultyButtons)
+            elif theScreen == "results":
+                e.currentMenuSize = len(e.resultsButtons)
         else:
             e.currentMenuSize = -1
 
