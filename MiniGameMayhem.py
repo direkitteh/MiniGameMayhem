@@ -76,6 +76,8 @@ class MiniGameMayhem:
     currentScore = 0
     theCurrentFraction = None
     answerScore = None
+    currentAnsNumerator = ""
+    currentAnsDenominator = ""
 
     #timer stuff
     timerMax = None
@@ -202,6 +204,8 @@ class MiniGameMayhem:
         e.fractionIsSolved = False
         e.currentScore = 0
         e.answerScore = e.getMaxAnswerScore()
+        e.currentAnsNumerator = ""
+        e.currentAnsDenominator = ""
         #decide on timer based on difficulty
         if(e.level == 1):
             e.timerMax = 60
@@ -213,6 +217,8 @@ class MiniGameMayhem:
         e.roundIsInitalized = True
 
     def fractionWasSolved(e):
+        e.currentAnsNumerator = ""
+        e.currentAnsDenominator = ""
         e.currentScore += e.answerScore
         e.newFraction()
         e.updateGameState()
@@ -222,7 +228,9 @@ class MiniGameMayhem:
         #redraw screen
         e.drawFraction(e.theCurrentFraction, e.theScreen)
         #decay answerScore
-        e.answerScore -= .1 #for now
+        e.answerScore -= .1
+        if (e.answerScore <10):
+            e.answerScore = 10
         #redraw more stuff
         myFont = pygame.font.SysFont("monospace", 32)
         answerScoreRender = myFont.render(str(int(round(e.answerScore))), 1, (255,255,0))
@@ -289,34 +297,32 @@ class MiniGameMayhem:
         theFraction.ansY = theFraction.unSimpY / theFraction.gcd
         return theFraction
 
-    #TODO: finish this rather than just print the values
     def drawFraction(e, theFraction, theScreen):
         if (e.debugFracOrNot == False):
             myfont = pygame.font.SysFont("monospace", 32)
 
             numerator = myfont.render(str(theFraction.unSimpX), 1, (255,255,0))
-            e.theScreen.blit(numerator, (250, 350))
-
             denominator = myfont.render(str(theFraction.unSimpY), 1, (255,255,0))
-            e.theScreen.blit(denominator, (250, 450))
-
             divideSign = myfont.render("/", 1, (255,255,0))
-            e.theScreen.blit(divideSign, (350, 400))
-
             gcd = myfont.render(str(theFraction.gcd), 1, (255,255,0))
+            equalsSign = myfont.render("=", 1, (255,255,0))
+            horizontalLines = myfont.render("__", 1, (255,255,0))
+
+            if(e.currentAnsNumerator == ""):
+                ansNumerator = myfont.render("?", 1, (255,255,0))
+                ansDenominator = myfont.render("?", 1, (255,255,0))
+            else:
+                ansNumerator = myfont.render(e.currentAnsNumerator, 1, (255,255,0))
+                ansDenominator = myfont.render(e.currentAnsDenominator, 1, (255,255,0))
+
+            e.theScreen.blit(numerator, (250, 350))
+            e.theScreen.blit(denominator, (250, 450))
+            e.theScreen.blit(divideSign, (350, 400))
             e.theScreen.blit(gcd, (450, 350))
             e.theScreen.blit(gcd, (450, 450))
-
-            equalsSign = myfont.render("=", 1, (255,255,0))
             e.theScreen.blit(equalsSign, (550, 400))
-
-            ansNumerator = myfont.render(str(theFraction.ansX), 1, (255,255,0))
             e.theScreen.blit(ansNumerator, (650, 350))
-
-            ansDenominator = myfont.render(str(theFraction.ansY), 1, (255,255,0))
             e.theScreen.blit(ansDenominator, (650, 450))
-
-            horizontalLines = myfont.render("__", 1, (255,255,0))
             e.theScreen.blit(horizontalLines, (250, 400))
             e.theScreen.blit(horizontalLines, (450, 400))
             e.theScreen.blit(horizontalLines, (650, 400))
