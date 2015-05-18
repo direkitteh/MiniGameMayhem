@@ -65,7 +65,21 @@ class MiniGameMayhem:
     startPrintY = 160 #TEMPORARY TO PRINT FRACTIONS AS TEXT IN GAME
     fractionsToDraw = []
 
+    level = None
+
     theScreen = None
+
+    fractionIsSolved = False
+    roundIsInitalized = False
+
+    #in game stuff
+    currentScore = 0
+    theCurrentFraction = None
+    answerScore = None
+
+    #timer stuff
+    timerMax = None
+    timerCur = None
 
     debugPrintLoc = 100
     debugFracOrNot = False
@@ -111,8 +125,8 @@ class MiniGameMayhem:
             if handled == "quit":
                 return
 
-            # Clear Display
-            screen.fill((2, 120, 120))  # 255 for white
+            # Clear Display (fill it with proper color)
+            screen.fill((2, 120, 120))
 
             #do different things depending on the current screen
             if(self.currentScreen == "title"): #title screen
@@ -136,22 +150,25 @@ class MiniGameMayhem:
                 self.currentScreen == "medium" or \
                     self.currentScreen == "hard":
                 if self.currentScreen == "easy":
-                    level = 1
+                    self.level = 1
                 elif self.currentScreen == "medium":
-                    level = 2
+                    self.level = 2
                 elif self.currentScreen == "hard":
-                    level = 3
+                    self.level = 3
                 else:
                     print("error, currentScreen not providing level properly")
                 #temporary game display stuff
                 self.startPrintY = 160 #TODO: for now
-                while(self.tempNumPrinted < self.tempNumFracToPrint):
-                    print("level is: " + str(level))
-                    theFraction = self.makeFraction(level)
-                    self.fractionsToDraw.append(theFraction)
-                    self.tempNumPrinted += 1
-                for aFrac in self.fractionsToDraw:
-                    self.drawFraction(aFrac, screen)
+                if (self.debugFracOrNot):
+                    while(self.tempNumPrinted < self.tempNumFracToPrint):
+                        print("level is: " + str(self.level))
+                        theFraction = self.makeFraction()
+                        self.fractionsToDraw.append(theFraction)
+                        self.tempNumPrinted += 1
+                    for aFrac in self.fractionsToDraw:
+                        self.drawFraction(aFrac, screen)
+                else: #actual game display stuff
+                    self.handleGameplay()        
 
             #debug tools. set debugOrNot to True to enable. How to use:
             #set tryCatchOrNot to False if you want debug data able to fail
@@ -161,13 +178,61 @@ class MiniGameMayhem:
             self.debugPrintLoc = 100
             if debugOrNot:
                 self.doTheDebugThing(tryCatchOrNot)
-                self.debugFracOrNot = True
+                self.debugFracOrNot = False
 
             # Flip Display (Update the full display Surface to the screen)
             pygame.display.flip()
 
             # Try to stay at 30 FPS
             self.clock.tick(30)
+
+    def handleGameplay(e):
+        if (e.roundIsInitalized == False):
+            print("A")
+            e.initializeRound()
+        elif(e.fractionIsSolved):
+            print("B")
+            e.fractionWasSolved()
+        else:
+            #print("C")
+            e.updateGameState()
+
+    def initializeRound(e):
+        e.newFraction()
+        e.fractionIsSolved = False
+        e.currentScore = 0
+        e.answerScore = e.getMaxAnswerScore()
+        #decide on timer based on difficulty
+        if(e.level == 1):
+            e.timerMax = 60
+        elif(e.level == 2):
+            e.timerMax = 60
+        elif(e.level == 3):
+            e.timerMax = 60
+        #done
+        e.roundIsInitalized = True
+
+    def fractionWasSolved(e):
+        e.currentScore += e.answerScore
+        e.newFraction()
+        e.updateGameState()
+        e.answerScore = e.getMaxAnswerScore()
+
+    def updateGameState(e):
+        #redraw screen
+        e.drawFraction(e.theCurrentFraction, e.theScreen)
+        #decay answerScore
+        e.answerScore -= .1 #for now
+        #redraw more stuff
+        myFont = pygame.font.SysFont("monospace", 32)
+        answerScoreRender = myFont.render(str(int(round(e.answerScore))), 1, (255,255,0))
+        e.theScreen.blit(answerScoreRender, (400,200))
+
+    def newFraction(e):
+        e.theCurrentFraction = e.makeFraction()
+
+    def getMaxAnswerScore(e):
+        return 100 + 200 * (e.level - 1)
 
     def doTheDebugThing(e, tryCatchOrNot):
         if (tryCatchOrNot):
@@ -194,7 +259,7 @@ class MiniGameMayhem:
         e.debugPrintLoc += 20
 
     #returns a Fraction object that is created based on the level.
-    def makeFraction(e, level):
+    def makeFraction(e):
         #reference for possibleX/Y. See actual value at beginning of class
         #possibleX = [0,1,2,3,5,7,9,11,13,17,19,23]
         #possibleY = [1,2,3,5,7,9,11,13,17,19,23]
@@ -202,15 +267,15 @@ class MiniGameMayhem:
         simpY = -1
         unSimpX = -1
         unSimpY = -1
-        if (level == 1):
+        if (e.level == 1):
             theFactor = random.randint(2,5)
             unSimpX = 1 * theFactor
             unSimpY = random.randint(1,5) * theFactor
-        elif (level == 2):
+        elif (e.level == 2):
             theFactor = random.randint(3,7)
             unSimpX = random.randint(1,2) * theFactor
             unSimpY =  e.possibleY[random.randint(2,4)] * theFactor
-        elif (level == 3):
+        elif (e.level == 3):
             theFactor = random.randint(7,12)
             unSimpX =  random.randint(1,7) * theFactor
             unSimpY =  random.randint(2,10) * theFactor
@@ -227,7 +292,34 @@ class MiniGameMayhem:
     #TODO: finish this rather than just print the values
     def drawFraction(e, theFraction, theScreen):
         if (e.debugFracOrNot == False):
-            pass
+            myfont = pygame.font.SysFont("monospace", 32)
+
+            numerator = myfont.render(str(theFraction.unSimpX), 1, (255,255,0))
+            e.theScreen.blit(numerator, (250, 350))
+
+            denominator = myfont.render(str(theFraction.unSimpY), 1, (255,255,0))
+            e.theScreen.blit(denominator, (250, 450))
+
+            divideSign = myfont.render("/", 1, (255,255,0))
+            e.theScreen.blit(divideSign, (350, 400))
+
+            gcd = myfont.render(str(theFraction.gcd), 1, (255,255,0))
+            e.theScreen.blit(gcd, (450, 350))
+            e.theScreen.blit(gcd, (450, 450))
+
+            equalsSign = myfont.render("=", 1, (255,255,0))
+            e.theScreen.blit(equalsSign, (550, 400))
+
+            ansNumerator = myfont.render(str(theFraction.ansX), 1, (255,255,0))
+            e.theScreen.blit(ansNumerator, (650, 350))
+
+            ansDenominator = myfont.render(str(theFraction.ansY), 1, (255,255,0))
+            e.theScreen.blit(ansDenominator, (650, 450))
+
+            horizontalLines = myfont.render("__", 1, (255,255,0))
+            e.theScreen.blit(horizontalLines, (250, 400))
+            e.theScreen.blit(horizontalLines, (450, 400))
+            e.theScreen.blit(horizontalLines, (650, 400))
         elif (e.debugFracOrNot == True):
             e.debugDrawFraction(theFraction, theScreen)
         else:
