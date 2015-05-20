@@ -16,12 +16,11 @@ class MainMenu(GameState):
     def start(self):
         self.running = True
         #global NOT_XO
-        global CANVAS
         while self.running:
             while Gtk.events_pending():
                 Gtk.main_iteration()
             #if( NOT_XO == True ):
-            events == CANVAS.translator
+            events == sugargame.canvas.CANVAS.translator
             #else:
             #  events = pygame.event.get()
             self.update(events)
