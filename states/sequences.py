@@ -22,7 +22,7 @@ class SequenceGame:
         self.problem = None
         self.answer_input = None
         self.time_remaining = 60
-        self.current_difficulty = 11
+        self.current_difficulty = 1
         self.score = 0
 
     def start(self):
@@ -177,7 +177,6 @@ class SequenceGame:
 
 class SequenceProblem:
     def __init__(self, difficulty):
-        print "Current Difficulty: " + str(difficulty)
         self.difficulty = difficulty
         difficulty_mapping = {
             1: "+",
@@ -187,7 +186,6 @@ class SequenceProblem:
         }
         operator = difficulty_mapping[self.translate_difficulty()]
         self.gen_simple(random.randint(0, 1), operator)
-        print "Current Answer: " + self.solution
 
     def gen_simple(self, eqn_given, operator):
         increment = random.randint(1, 9)
