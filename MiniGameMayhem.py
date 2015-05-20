@@ -50,8 +50,11 @@ class MiniGameMayhem:
             self.screen = pygame.display.get_surface()
             self.clock = pygame.time.Clock()
             print "boop " + str(self.clock)
-        self.gamestate = MainMenu(self.clock, self.screen)
+        #self.gamestate = MainMenu(self.clock, self.screen)
+        
+        self.gamestate = FractionsGame(self.screen, self.clock)
         self.gamestate.start()
+        self.switchToScreen("howToPlay")
 
 
 # This function is called when the game is run directly from the command line:
