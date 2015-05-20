@@ -9,8 +9,6 @@ class MiniGameMayhem:
         self.paused = False
         global NOT_XO
         NOT_XO = False
-        global NOT_XO
-        NOT_XO = False
 
     def initNonXO(self):
         global NOT_XO
