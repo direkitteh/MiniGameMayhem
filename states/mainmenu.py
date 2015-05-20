@@ -20,7 +20,7 @@ class MainMenu(GameState):
             while Gtk.events_pending():
                 Gtk.main_iteration()
             #if( NOT_XO == True ):
-            events == sugargame.canvas.CANVAS.translator
+            events = sugargame.canvas.CANVAS.translator
             #else:
             #  events = pygame.event.get()
             self.update(events)
@@ -57,7 +57,7 @@ class MainMenu(GameState):
                     # Switch state to angles game
                     pass
         else:
-          pressed = event._get_pressed()
+          pressed = events._get_pressed()
           if checkPressed(pressed, pygame.K_1):
               # Switch state to sequence game
               game = SequenceGame(self.screen, self.clock)
