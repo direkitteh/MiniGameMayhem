@@ -7,10 +7,14 @@ from gamestate import *
 class MiniGameMayhem:
     def __init__(self):
         self.paused = False
-        self.not_xo = False
+        global NOT_XO
+        NOT_XO = False
+        global NOT_XO
+        NOT_XO = False
 
     def initNonXO(self):
-        self.not_xo = True
+        global NOT_XO
+        NOT_XO = True
         pygame.init()
         pygame.font.init()
         swidth = pygame.display.Info().current_w
@@ -43,7 +47,8 @@ class MiniGameMayhem:
     def run(self):
         pygame.font.init() 
 
-        if( self.not_xo == False ): # canvas seems to start pygame
+        global NOT_XO
+        if( NOT_XO == False ): # canvas seems to start pygame
             self.screen = pygame.display.get_surface()
             self.clock = pygame.time.Clock()
             print "boop " + str(self.clock)
