@@ -4,6 +4,7 @@ from gi.repository import Gtk
 from gamestate import *
 from .patterns.patterns import Patterns
 from states.sequences import SequenceGame
+import sugargame.canvas
 
 class MainMenu(GameState):
     def __init__(self, clock, screen):
@@ -15,12 +16,12 @@ class MainMenu(GameState):
     def start(self):
         self.running = True
         #global NOT_XO
-        #global CANVAS
+        global CANVAS
         while self.running:
             while Gtk.events_pending():
                 Gtk.main_iteration()
             #if( NOT_XO == True ):
-              events == CANVAS.translator
+            events == CANVAS.translator
             #else:
             #  events = pygame.event.get()
             self.update(events)
