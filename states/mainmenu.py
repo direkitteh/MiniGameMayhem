@@ -1,5 +1,6 @@
 import pygame
 
+from gi.repository import Gtk
 from gamestate import *
 from .patterns.patterns import Patterns
 from states.sequences import SequenceGame
@@ -7,13 +8,16 @@ from states.sequences import SequenceGame
 class MainMenu(GameState):
     def __init__(self, clock, screen):
         GameState.__init__(self, clock, screen)
-        self.font = pygame.font.SysFont("monospace", 25)
+	pygame.font.init()
+        self.font = pygame.font.SysFont(None, 25)
         pass
 
     # Run the menu
     def start(self):
         self.running = True
         while self.running:
+            while Gtk.events_pending():
+                Gtk.main_iteration()
             events = events = pygame.event.get()
             self.update(events)
             self.draw()
