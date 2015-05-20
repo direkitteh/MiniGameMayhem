@@ -3,6 +3,7 @@ import pygame
 from gamestate import *
 from .patterns.patterns import Patterns
 from states.sequences import SequenceGame
+from .fractionsgame.fractionsgame import FractionsGame
 
 class MainMenu(GameState):
     def __init__(self, clock, screen):
@@ -36,7 +37,8 @@ class MainMenu(GameState):
                     game.start()
                 elif event.key == pygame.K_2:
                     # Switch state to fractions game
-                    pass
+                    game = FractionsGame(self.clock, self.screen)
+                    game.run()
                 elif event.key == pygame.K_3:
                     # Switch state to patterns game
                     game = Patterns(self.clock, self.screen)
