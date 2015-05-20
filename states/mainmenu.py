@@ -14,15 +14,15 @@ class MainMenu(GameState):
     # Run the menu
     def start(self):
         self.running = True
-        global NOT_XO
-        global CANVAS
+        #global NOT_XO
+        #global CANVAS
         while self.running:
             while Gtk.events_pending():
                 Gtk.main_iteration()
-            if( NOT_XO == True ):
+            #if( NOT_XO == True ):
               events == CANVAS.translator
-            else:
-              events = pygame.event.get()
+            #else:
+            #  events = pygame.event.get()
             self.update(events)
             self.draw()
             pygame.display.flip()
@@ -31,8 +31,8 @@ class MainMenu(GameState):
     # Update movement, track events
     def update(self, events):
         # for event in events:
-        global NOT_XO
-        if(NOT_XO):
+        #global NOT_XO
+        if(False):
           for event in events:
             if event.type == pygame.QUIT:
                 self.running = False
