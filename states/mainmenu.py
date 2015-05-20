@@ -85,4 +85,4 @@ class MainMenu(GameState):
 
     
 def checkPressed(pressed, key):
-  return key in pressed and pressed[key]
+  return pressed[key]
