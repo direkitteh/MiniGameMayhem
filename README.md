@@ -38,3 +38,6 @@ If you want to distribute the game onto an XOPC
 If you want to distribute the game onto a regular computer
 
 >   python ./setup.py dist
+
+
+***If you're having trouble, the many fine folks of the [#rit-foss IRC channel](http://webchat.freenode.net/?&channels=rit-foss) on freenode would be able to answer questions***
